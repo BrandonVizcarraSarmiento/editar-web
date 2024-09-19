@@ -29,11 +29,7 @@ const EditTestimonio = () => {
           setSelectedTestimonio(data[0]);
         }
       } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("Error desconocido al cargar los testimonios");
-        }
+        setError(error instanceof Error ? error.message : "Error desconocido al cargar los testimonios");
         console.error("Fetch error:", error);
       }
     };
@@ -58,11 +54,7 @@ const EditTestimonio = () => {
           throw new Error("Error al actualizar el testimonio");
         }
       } catch (error) {
-        if (error instanceof Error) {
-          alert(error.message);
-        } else {
-          alert("Error desconocido al actualizar el testimonio");
-        }
+        alert(error instanceof Error ? error.message : "Error desconocido al actualizar el testimonio");
         console.error("Submit error:", error);
       }
     }
@@ -89,29 +81,26 @@ const EditTestimonio = () => {
           throw new Error("Error al subir la imagen");
         }
       } catch (error) {
-        if (error instanceof Error) {
-          alert(error.message);
-        } else {
-          alert("Error desconocido al subir la imagen");
-        }
+        alert(error instanceof Error ? error.message : "Error desconocido al subir la imagen");
         console.error("Upload error:", error);
       }
     }
   };
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="text-red-500">{error}</div>;
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Editar Testimonios</h2>
-      <Tabs>
-        <TabsList>
+    <div className="p-4 max-w-3xl mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center">Editar Testimonios</h2>
+      <Tabs className="space-y-4">
+        <TabsList className="flex space-x-2 overflow-x-auto whitespace-nowrap">
           {testimonios.map((testimonio) => (
             <TabsTrigger
               key={testimonio.id}
               value={`testimonio-${testimonio.id}`}
+              className="text-cyan-600"
               onClick={() => setSelectedTestimonio(testimonio)}
             >
               {testimonio.nombre}
@@ -119,38 +108,46 @@ const EditTestimonio = () => {
           ))}
         </TabsList>
         {selectedTestimonio && (
-          <TabsContent value={`testimonio-${selectedTestimonio.id}`}>
-            <div>
-              <label>Nombre:</label>
+          <TabsContent value={`testimonio-${selectedTestimonio.id}`} className="bg-white p-4 rounded-md shadow-md">
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-1">Nombre:</label>
               <input
                 type="text"
                 value={selectedTestimonio.nombre}
                 onChange={(e) =>
                   setSelectedTestimonio({ ...selectedTestimonio, nombre: e.target.value })
                 }
+                className="w-full border border-gray-300 rounded-md p-2"
               />
             </div>
-            <div>
-              <label>Testimonio:</label>
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-1">Testimonio:</label>
               <textarea
                 value={selectedTestimonio.testimonio}
                 onChange={(e) =>
                   setSelectedTestimonio({ ...selectedTestimonio, testimonio: e.target.value })
                 }
+                className="w-full border border-gray-300 rounded-md p-2 resize-none"
+                rows={4}
+                style={{ resize: "none" }}
               />
             </div>
-            <div>
-              <label>Avatar:</label>
-              <input type="file" onChange={handleImageUpload} />
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-1">Avatar:</label>
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
               {selectedTestimonio.avatar && (
                 <img
                   src={selectedTestimonio.avatar}
                   alt={selectedTestimonio.nombre}
-                  className="w-32 h-32 object-cover mt-2"
+                  className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300"
                 />
               )}
             </div>
-            <Button onClick={handleSubmit}>Actualizar Testimonio</Button>
+            <Button onClick={handleSubmit} className="w-full">Actualizar Testimonio</Button>
           </TabsContent>
         )}
       </Tabs>
