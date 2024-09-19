@@ -22,7 +22,7 @@ const NavbarDashboard = () => {
                     <Link href="/dashboard/misionvision" className="flex items-center p-2 hover:bg-gray-500 rounded">
                         Misión, Visión y Valores
                     </Link>
-                    <Link href="#" className="flex items-center p-2  hover:bg-gray-500 rounded">
+                    <Link href="/dashboard/beneficios" className="flex items-center p-2  hover:bg-gray-500 rounded">
                         beneficios
                     </Link>
                     <Link href="#" className="flex items-center p-2  hover:bg-gray-500 rounded">
