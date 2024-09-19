@@ -1,0 +1,14 @@
+{
+  "mision": {
+    "texto": "Nuestra misión en FishFood es ofrecer productos de pescado saludables, deliciosos y accesibles para todos, esto fue ditado.",
+    "imagen": "/img/capuchino.jpg"
+  },
+  "vision": {
+    "texto": "eddsdd  Ser líderes del mercado en Perú en productos preformados de pescado, reconocidos por calidad y sostenibilidad.",
+    "imagen": "/img/3-siete procesos.jpg"
+  },
+  "valores": {
+    "texto": "edit Valores: calidad, sostenibilidad y promoción de una alimentación saludable.",
+    "imagen": "/img/valores.svg"
+  }
+}
