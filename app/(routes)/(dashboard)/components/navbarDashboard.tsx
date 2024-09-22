@@ -28,7 +28,7 @@ const NavbarDashboard = () => {
                     <Link href="/dashboard/testimonios" className="flex items-center p-2  hover:bg-gray-500 rounded">
                         Testimonio
                     </Link>
-                    <Link href="#" className="flex items-center p-2  hover:bg-gray-500 rounded">
+                    <Link href="/dashboard/about" className="flex items-center p-2  hover:bg-gray-500 rounded">
                         Sobre Nosotros
                     </Link>
                     <Link href="/dashboard/galeria" className="flex items-center p-2  hover:bg-gray-500 rounded">

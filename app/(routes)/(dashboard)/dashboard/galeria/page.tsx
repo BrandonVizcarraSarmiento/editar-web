@@ -13,10 +13,13 @@ import {
     AlertDialogDescription,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ToastProvider } from "@/components/ui/toast"; // Asegúrate de que este componente exista
 
 const Galeria = () => {
     const [images, setImages] = useState<string[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [toastMessage, setToastMessage] = useState<string | null>(null); // Estado para el mensaje del toast
+    const [showToast, setShowToast] = useState(false); // Estado para controlar la visibilidad del toast
 
     // Obtener las imágenes al cargar el componente
     useEffect(() => {
@@ -44,59 +47,78 @@ const Galeria = () => {
         const result = await res.json();
 
         if (result.success) {
-            alert("Imagen eliminada correctamente");
             setImages((prevImages) => prevImages.filter((img) => img !== selectedImage));
             setSelectedImage(null); // Limpiar la imagen seleccionada
+            setToastMessage("Imagen eliminada correctamente"); // Establece el mensaje para el toast
         } else {
-            alert("Error al eliminar la imagen");
+            setToastMessage("Error al eliminar la imagen"); // Mensaje de error
         }
+
+        // Mostrar el toast
+        setShowToast(true);
+
+        // Ocultar el toast después de unos segundos
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000); // El toast desaparecerá después de 3 segundos
     };
 
     return (
-        <div className="p-4 max-h-screen" style={{ height: "90vh" }}>
-            <h2 className="text-xl font-bold mb-4">Galería de Imágenes</h2>
-            <div className="overflow-y-auto scrollbar-hide max-h-full p-2 border border-gray-300 rounded-lg">
-                {/* Contenedor con scroll pero sin mostrar el scrollbar */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {images.map((image) => (
-                        <div key={image} className="relative">
-                            <img
-                                src={`/img/${image}`}
-                                alt={image}
-                                className="w-full h-auto object-cover rounded-lg"
-                            />
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        onClick={() => setSelectedImage(image)}
-                                        className="absolute top-2 right-2 bg-red-500 text-white py-1 px-2 rounded"
-                                    >
-                                        Eliminar
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>¿Deseas eliminar esta imagen?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Esta acción no se puede deshacer. La imagen será eliminada de forma permanente.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                        <AlertDialogAction
-                                            onClick={handleDelete}
-                                            className="bg-red-500 text-white"
+        <ToastProvider> {/* Proveedor de toast */}
+            <div className="p-4 h-full">
+                <h2 className="text-xl font-bold mb-2">Galería de Imágenes</h2>
+                <div className="overflow-y-auto scrollbar-hide h-[87vh] p-2 border border-gray-300 rounded-lg">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {images.map((image) => (
+                            <div
+                                key={image}
+                                className="relative flex justify-center items-center bg-gray-200 rounded-lg w-full h-64"
+                            >
+                                <img
+                                    src={`/img/${image}`}
+                                    alt={image}
+                                    className="object-contain w-full h-full rounded-lg"
+                                />
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            onClick={() => setSelectedImage(image)}
+                                            className="absolute top-2 right-2 bg-red-500 text-white py-1 px-2 rounded"
                                         >
                                             Eliminar
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                    ))}
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>¿Deseas eliminar esta imagen?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Esta acción no se puede deshacer. La imagen será eliminada de forma permanente.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={handleDelete}
+                                                className="bg-red-500 text-white"
+                                            >
+                                                Eliminar
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {/* Componente Toast */}
+            {showToast && toastMessage && (
+                <div className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
+                    {toastMessage}
+                </div>
+            )}
+        </ToastProvider>
     );
 };
 
