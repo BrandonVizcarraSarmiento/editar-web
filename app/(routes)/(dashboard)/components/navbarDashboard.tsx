@@ -6,8 +6,8 @@ const NavbarDashboard = () => {
         <div className="flex min-h-screen">
             <aside className="w-64 shadow-md flex flex-col justify-between">
                 {/* Usuario en la parte superior */}
-                <div className="p-6">
-                    <h2 className="text-center text-xl font-semibold">FishFood</h2>
+                <div className="p-6 text-center">
+                    <Link href="/dashboard" className="text-xl font-semibold">FishFood</Link>
                 </div>
 
                 {/* Opciones de navegación centradas */}

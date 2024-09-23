@@ -92,15 +92,14 @@ const EditTestimonio = () => {
   }
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">Editar Testimonios</h2>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-6">Editar Testimonios</h2>
       <Tabs className="space-y-4">
-        <TabsList className="flex space-x-2 overflow-x-auto whitespace-nowrap">
+        <TabsList className="">
           {testimonios.map((testimonio) => (
             <TabsTrigger
               key={testimonio.id}
               value={`testimonio-${testimonio.id}`}
-              className="text-cyan-600"
               onClick={() => setSelectedTestimonio(testimonio)}
             >
               {testimonio.nombre}
@@ -110,7 +109,7 @@ const EditTestimonio = () => {
         {selectedTestimonio && (
           <TabsContent value={`testimonio-${selectedTestimonio.id}`} className="bg-white p-4 rounded-md shadow-md">
             <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1">Nombre:</label>
+              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Nombre:</label>
               <input
                 type="text"
                 value={selectedTestimonio.nombre}
@@ -121,7 +120,7 @@ const EditTestimonio = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1">Testimonio:</label>
+              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Testimonio:</label>
               <textarea
                 value={selectedTestimonio.testimonio}
                 onChange={(e) =>
@@ -133,7 +132,7 @@ const EditTestimonio = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1">Avatar:</label>
+              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Avatar:</label>
               <input
                 type="file"
                 onChange={handleImageUpload}
@@ -147,7 +146,7 @@ const EditTestimonio = () => {
                 />
               )}
             </div>
-            <Button onClick={handleSubmit} className="w-full">Actualizar Testimonio</Button>
+            <Button onClick={handleSubmit} className="">Actualizar Testimonio</Button>
           </TabsContent>
         )}
       </Tabs>
