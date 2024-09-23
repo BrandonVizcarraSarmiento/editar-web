@@ -101,7 +101,7 @@ const EditMisionVision = () => {
           <TabsTrigger value="vision">Visión</TabsTrigger>
           <TabsTrigger value="valores">Valores</TabsTrigger>
         </TabsList>
-        <TabsContent value="mision">
+        <TabsContent value="mision" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('mision'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Misión</label>
@@ -127,7 +127,7 @@ const EditMisionVision = () => {
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>
         </TabsContent>
-        <TabsContent value="vision">
+        <TabsContent value="vision" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('vision'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Visión</label>
@@ -153,7 +153,7 @@ const EditMisionVision = () => {
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>
         </TabsContent>
-        <TabsContent value="valores">
+        <TabsContent value="valores" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('valores'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Valores</label>

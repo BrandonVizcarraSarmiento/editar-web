@@ -107,7 +107,7 @@ const EditTestimonio = () => {
           ))}
         </TabsList>
         {selectedTestimonio && (
-          <TabsContent value={`testimonio-${selectedTestimonio.id}`} className="bg-white p-4 rounded-md shadow-md">
+          <TabsContent value={`testimonio-${selectedTestimonio.id}`} className="p-4 rounded-md shadow-md dark:bg-slate-800">
             <div className="mb-4">
               <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Nombre:</label>
               <input

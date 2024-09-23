@@ -55,7 +55,7 @@ const EditBanner = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-md">
+    <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
       <h1 className="text-2xl font-bold mb-4 dark:text-blue-500">Edita el Banner</h1>
       <label className="mb-4">
         <input

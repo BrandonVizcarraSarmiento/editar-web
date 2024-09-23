@@ -23,7 +23,7 @@ const NavbarDashboard = () => {
                         Misión, Visión y Valores
                     </Link>
                     <Link href="/dashboard/beneficios" className="flex items-center p-2  hover:bg-gray-500 rounded">
-                        beneficios
+                        Beneficios
                     </Link>
                     <Link href="/dashboard/testimonios" className="flex items-center p-2  hover:bg-gray-500 rounded">
                         Testimonio

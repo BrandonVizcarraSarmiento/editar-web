@@ -59,7 +59,7 @@ const EditBeneficio = () => {
           ))}
         </TabsList>
         {editedBeneficios.map((beneficio, index) => (
-          <TabsContent key={index} value={`beneficio-${index}`}>
+          <TabsContent key={index} value={`beneficio-${index}`} className="p-4 rounded-md shadow-md dark:bg-slate-800">
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
               <div>
                 <label className="block font-semibold mb-2">Pregunta</label>

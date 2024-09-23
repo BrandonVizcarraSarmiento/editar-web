@@ -67,7 +67,7 @@ const Galeria = () => {
         <ToastProvider> {/* Proveedor de toast */}
             <div className="p-4 h-full">
                 <h2 className="text-xl font-bold mb-2">Galería de Imágenes</h2>
-                <div className="overflow-y-auto scrollbar-hide h-[87vh] p-2 border border-gray-300 rounded-lg">
+                <div className="overflow-y-auto scrollbar-hide h-[87vh] p-2 border border-gray-300 rounded-lg dark:bg-slate-800">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {images.map((image) => (
                             <div

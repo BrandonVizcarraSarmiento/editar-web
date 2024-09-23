@@ -122,7 +122,7 @@ const EditAbout = () => {
           <TabsTrigger value="seccion1">Sección 1</TabsTrigger>
           <TabsTrigger value="seccion2">Sección 2</TabsTrigger>
         </TabsList>
-        <TabsContent value="quienesSomos">
+        <TabsContent value="quienesSomos" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('quienesSomos'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Quienes Somos</label>
@@ -137,7 +137,7 @@ const EditAbout = () => {
           </form>
         </TabsContent>
 
-        <TabsContent value="seccion1">
+        <TabsContent value="seccion1" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('seccion1'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Sección 1</label>
@@ -164,7 +164,7 @@ const EditAbout = () => {
           </form>
         </TabsContent>
 
-        <TabsContent value="seccion2">
+        <TabsContent value="seccion2" className="p-4 rounded-md shadow-md dark:bg-slate-800">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('seccion2'); }}>
             <div>
               <label className="block font-semibold mb-2">Texto de Sección 2</label>

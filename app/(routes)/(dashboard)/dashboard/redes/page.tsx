@@ -69,7 +69,7 @@ const EditRedes = () => {
                     <TabsTrigger value="facebook">Facebook</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="whatsapp">
+                <TabsContent value="whatsapp" className="p-4 rounded-md shadow-md dark:bg-slate-800">
                     <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('whatsapp'); }}>
                         <div>
                             <label className="block font-semibold mb-2">Enlace de WhatsApp</label>
@@ -84,7 +84,7 @@ const EditRedes = () => {
                     </form>
                 </TabsContent>
 
-                <TabsContent value="instagram">
+                <TabsContent value="instagram" className="p-4 rounded-md shadow-md dark:bg-slate-800">
                     <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('instagram'); }}>
                         <div>
                             <label className="block font-semibold mb-2">Enlace de Instagram</label>
@@ -99,7 +99,7 @@ const EditRedes = () => {
                     </form>
                 </TabsContent>
 
-                <TabsContent value="facebook">
+                <TabsContent value="facebook" className="p-4 rounded-md shadow-md dark:bg-slate-800">
                     <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('facebook'); }}>
                         <div>
                             <label className="block font-semibold mb-2">Enlace de Facebook</label>
