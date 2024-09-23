@@ -6,11 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const EditAbout = () => {
   const [aboutData, setAboutData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     seccion1: null,
     seccion2: null,
+  });
+  const [previewImages, setPreviewImages] = useState<{ [key: string]: string }>({
+    seccion1: "",
+    seccion2: "",
   });
 
   // Cargar la data actual desde la API
@@ -20,10 +23,12 @@ const EditAbout = () => {
         const res = await fetch("/api/about/get");
         const data = await res.json();
         setAboutData(data);
-        setLoading(false);
+        setPreviewImages({
+          seccion1: data.seccion1.imagen,
+          seccion2: data.seccion2.imagen,
+        });
       } catch (err) {
         setError("Error al cargar la información");
-        setLoading(false);
       }
     };
     fetchData();
@@ -88,7 +93,24 @@ const EditAbout = () => {
     setFiles({ ...files, [section]: null }); // Limpiar el archivo seleccionado
   };
 
-  if (loading) return <p>Cargando...</p>;
+  // Manejar la previsualización de imágenes
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, section: string) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      setFiles({ ...files, [section]: file });
+
+      // Crear una URL para previsualizar la imagen
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImages((prev) => ({
+          ...prev,
+          [section]: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -105,9 +127,9 @@ const EditAbout = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Quienes Somos</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
-                value={aboutData.quienesSomos.texto}
+                value={aboutData?.quienesSomos.texto}
                 onChange={(e) => setAboutData({ ...aboutData, quienesSomos: { ...aboutData.quienesSomos, texto: e.target.value } })}
               />
             </div>
@@ -120,9 +142,9 @@ const EditAbout = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Sección 1</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
-                value={aboutData.seccion1.texto}
+                value={aboutData?.seccion1.texto}
                 onChange={(e) => setAboutData({ ...aboutData, seccion1: { ...aboutData.seccion1, texto: e.target.value } })}
               />
             </div>
@@ -131,8 +153,12 @@ const EditAbout = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => { if (e.target.files) setFiles({ ...files, seccion1: e.target.files[0] }); }}
+                onChange={(e) => handleFileChange(e, 'seccion1')}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
+              {previewImages.seccion1 && (
+                <img src={previewImages.seccion1} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+              )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>
@@ -143,9 +169,9 @@ const EditAbout = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Sección 2</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
-                value={aboutData.seccion2.texto}
+                value={aboutData?.seccion2.texto}
                 onChange={(e) => setAboutData({ ...aboutData, seccion2: { ...aboutData.seccion2, texto: e.target.value } })}
               />
             </div>
@@ -154,8 +180,12 @@ const EditAbout = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => { if (e.target.files) setFiles({ ...files, seccion2: e.target.files[0] }); }}
+                onChange={(e) => handleFileChange(e, 'seccion2')}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
+              {previewImages.seccion2 && (
+                <img src={previewImages.seccion2} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+              )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>

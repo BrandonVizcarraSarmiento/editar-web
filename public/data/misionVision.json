@@ -1,6 +1,6 @@
 {
   "mision": {
-    "texto": "Nuestra misión en FishFood es ofrecer productos de pescado saludables, deliciosos y accesibles para todos, esto fue ditado.",
+    "texto": "Nuestra misión en FishFood es ofrecer productos de pescado saludables, deliciosos y accesibles para todos, esto fue hols.",
     "imagen": "/img/capuchino.jpg"
   },
   "vision": {
@@ -9,6 +9,6 @@
   },
   "valores": {
     "texto": "edit Valores: calidad, sostenibilidad y promoción de una alimentación saludable.",
-    "imagen": "/img/valores.svg"
+    "imagen": "/img/2-historia.jpg"
   }
 }

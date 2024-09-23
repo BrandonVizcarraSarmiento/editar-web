@@ -128,7 +128,6 @@ const EditTestimonio = () => {
                 }
                 className="w-full border border-gray-300 rounded-md p-2 resize-none"
                 rows={4}
-                style={{ resize: "none" }}
               />
             </div>
             <div className="mb-4">

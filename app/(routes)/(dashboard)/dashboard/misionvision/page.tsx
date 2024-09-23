@@ -22,11 +22,23 @@ const EditMisionVision = () => {
     valores: { texto: "", imagen: "" },
   });
 
+  const [previewImages, setPreviewImages] = useState<{ [key: string]: string }>({
+    mision: "",
+    vision: "",
+    valores: "",
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/misionvision/get");
       const result = await res.json();
       setData(result);
+      // Establecer las imágenes de vista previa desde el resultado de la API
+      setPreviewImages({
+        mision: result.mision.imagen,
+        vision: result.vision.imagen,
+        valores: result.valores.imagen,
+      });
     };
 
     fetchData();
@@ -64,11 +76,21 @@ const EditMisionVision = () => {
           ...prev,
           [section]: { ...prev[section], imagen: result.filePath },
         }));
+        // Previsualiza la imagen
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImages((prev) => ({
+            ...prev,
+            [section]: reader.result as string,
+          }));
+        };
+        reader.readAsDataURL(file);
       } else {
         alert("Error al subir la imagen");
       }
     }
-  };  
+  };
 
   return (
     <div className="p-4">
@@ -84,7 +106,7 @@ const EditMisionVision = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Misión</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
                 value={data.mision.texto}
                 onChange={(e) => setData({ ...data, mision: { ...data.mision, texto: e.target.value } })}
@@ -92,7 +114,15 @@ const EditMisionVision = () => {
             </div>
             <div>
               <label className="block font-semibold mb-2">Imagen de Misión</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'mision')} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileUpload(e, 'mision')}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+              {previewImages.mision && (
+                <img src={previewImages.mision} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+              )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>
@@ -102,7 +132,7 @@ const EditMisionVision = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Visión</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
                 value={data.vision.texto}
                 onChange={(e) => setData({ ...data, vision: { ...data.vision, texto: e.target.value } })}
@@ -110,7 +140,15 @@ const EditMisionVision = () => {
             </div>
             <div>
               <label className="block font-semibold mb-2">Imagen de Visión</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'vision')} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileUpload(e, 'vision')}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+              {previewImages.vision && (
+                <img src={previewImages.vision} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+              )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>
@@ -120,7 +158,7 @@ const EditMisionVision = () => {
             <div>
               <label className="block font-semibold mb-2">Texto de Valores</label>
               <textarea
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
                 value={data.valores.texto}
                 onChange={(e) => setData({ ...data, valores: { ...data.valores, texto: e.target.value } })}
@@ -128,7 +166,15 @@ const EditMisionVision = () => {
             </div>
             <div>
               <label className="block font-semibold mb-2">Imagen de Valores</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'valores')} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileUpload(e, 'valores')}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+              {previewImages.valores && (
+                <img src={previewImages.valores} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+              )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
           </form>

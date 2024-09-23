@@ -73,7 +73,7 @@ const EditBeneficio = () => {
               <div>
                 <label className="block font-semibold mb-2">Respuesta</label>
                 <textarea
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 rounded resize-none"
                   rows={4}
                   value={beneficio.respuesta}
                   onChange={(e) => handleChange(index, 'respuesta', e.target.value)}
