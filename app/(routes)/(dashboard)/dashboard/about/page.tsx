@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const EditAbout = () => {
   const [aboutData, setAboutData] = useState<any>(null);
@@ -90,56 +92,75 @@ const EditAbout = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h2>Editar "Quienes Somos"</h2>
-      <textarea
-        value={aboutData?.quienesSomos?.texto || ""}
-        onChange={(e) =>
-          setAboutData({
-            ...aboutData,
-            quienesSomos: { texto: e.target.value },
-          })
-        }
-      />
-      <button onClick={() => handleTextChange("quienesSomos", aboutData.quienesSomos.texto)}>
-        Guardar Cambios
-      </button>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Editar "Quienes Somos"</h2>
+      <Tabs>
+        <TabsList>
+          <TabsTrigger value="quienesSomos">Quienes Somos</TabsTrigger>
+          <TabsTrigger value="seccion1">Sección 1</TabsTrigger>
+          <TabsTrigger value="seccion2">Sección 2</TabsTrigger>
+        </TabsList>
+        <TabsContent value="quienesSomos">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('quienesSomos'); }}>
+            <div>
+              <label className="block font-semibold mb-2">Texto de Quienes Somos</label>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded"
+                rows={4}
+                value={aboutData.quienesSomos.texto}
+                onChange={(e) => setAboutData({ ...aboutData, quienesSomos: { ...aboutData.quienesSomos, texto: e.target.value } })}
+              />
+            </div>
+            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
+          </form>
+        </TabsContent>
 
-      <h2>Editar Sección 1</h2>
-      <textarea
-        value={aboutData?.seccion1?.texto || ""}
-        onChange={(e) =>
-          setAboutData({
-            ...aboutData,
-            seccion1: { texto: e.target.value, imagen: aboutData.seccion1.imagen },
-          })
-        }
-      />
-      <input
-        type="file"
-        onChange={(e) => {
-          if (e.target.files) setFiles({ ...files, seccion1: e.target.files[0] });
-        }}
-      />
-      <button onClick={() => handleUpdate("seccion1")}>Actualizar</button>
+        <TabsContent value="seccion1">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('seccion1'); }}>
+            <div>
+              <label className="block font-semibold mb-2">Texto de Sección 1</label>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded"
+                rows={4}
+                value={aboutData.seccion1.texto}
+                onChange={(e) => setAboutData({ ...aboutData, seccion1: { ...aboutData.seccion1, texto: e.target.value } })}
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-2">Imagen de Sección 1</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => { if (e.target.files) setFiles({ ...files, seccion1: e.target.files[0] }); }}
+              />
+            </div>
+            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
+          </form>
+        </TabsContent>
 
-      <h2>Editar Sección 2</h2>
-      <textarea
-        value={aboutData?.seccion2?.texto || ""}
-        onChange={(e) =>
-          setAboutData({
-            ...aboutData,
-            seccion2: { texto: e.target.value, imagen: aboutData.seccion2.imagen },
-          })
-        }
-      />
-      <input
-        type="file"
-        onChange={(e) => {
-          if (e.target.files) setFiles({ ...files, seccion2: e.target.files[0] });
-        }}
-      />
-      <button onClick={() => handleUpdate("seccion2")}>Actualizar</button>
+        <TabsContent value="seccion2">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleUpdate('seccion2'); }}>
+            <div>
+              <label className="block font-semibold mb-2">Texto de Sección 2</label>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded"
+                rows={4}
+                value={aboutData.seccion2.texto}
+                onChange={(e) => setAboutData({ ...aboutData, seccion2: { ...aboutData.seccion2, texto: e.target.value } })}
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-2">Imagen de Sección 2</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => { if (e.target.files) setFiles({ ...files, seccion2: e.target.files[0] }); }}
+              />
+            </div>
+            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
+          </form>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
