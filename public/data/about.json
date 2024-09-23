@@ -1,0 +1,13 @@
+{
+  "quienesSomos": {
+    "texto": "Texto 2 edit de Quienes Somos"
+  },
+  "seccion1": {
+    "texto": "Texto des la misión",
+    "imagen": "/img/cafe (2).jpg"
+  },
+  "seccion2": {
+    "texto": "Texto de la visión",
+    "imagen": "/img/imagen.png"
+  }
+}
