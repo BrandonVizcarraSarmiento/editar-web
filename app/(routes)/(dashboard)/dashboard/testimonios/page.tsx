@@ -1,5 +1,5 @@
-// components/clientes/editTestimonio.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,141 +13,145 @@ type Testimonio = {
 
 const EditTestimonio = () => {
   const [testimonios, setTestimonios] = useState<Testimonio[]>([]);
-  const [selectedTestimonio, setSelectedTestimonio] = useState<Testimonio | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [editedTestimonios, setEditedTestimonios] = useState<Testimonio[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await fetch("/api/testimonios/get");
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const data = await res.json();
-        setTestimonios(data);
-        if (data.length > 0) {
-          setSelectedTestimonio(data[0]);
-        }
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Error desconocido al cargar los testimonios");
-        console.error("Fetch error:", error);
-      }
+      const res = await fetch("/api/testimonios/get");
+      const data = await res.json();
+      setTestimonios(data);
+      setEditedTestimonios(data);
     };
 
     fetchData();
   }, []);
 
-  const handleSubmit = async () => {
-    if (selectedTestimonio) {
-      try {
-        const res = await fetch("/api/testimonios/update", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(selectedTestimonio),
-        });
-
-        if (res.ok) {
-          alert("Testimonio actualizado correctamente");
-        } else {
-          throw new Error("Error al actualizar el testimonio");
-        }
-      } catch (error) {
-        alert(error instanceof Error ? error.message : "Error desconocido al actualizar el testimonio");
-        console.error("Submit error:", error);
-      }
+  const handleSubmit = async (index: number) => {
+    const { id, nombre, testimonio, avatar } = editedTestimonios[index];
+    const res = await fetch("/api/testimonios/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, nombre, testimonio, avatar }),
+    });
+    if (res.ok) {
+      alert("Testimonio guardado correctamente");
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (index: number, field: keyof Testimonio, value: string) => {
+    setEditedTestimonios(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const handleImageUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
 
-      try {
-        const res = await fetch("/api/testimonios/upload", {
-          method: "POST",
-          body: formData,
-        });
+      const res = await fetch("/api/testimonios/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-        if (res.ok) {
-          const result = await res.json();
-          if (selectedTestimonio) {
-            setSelectedTestimonio({ ...selectedTestimonio, avatar: result.filePath });
-          }
-        } else {
-          throw new Error("Error al subir la imagen");
-        }
-      } catch (error) {
-        alert(error instanceof Error ? error.message : "Error desconocido al subir la imagen");
-        console.error("Upload error:", error);
+      if (res.ok) {
+        const result = await res.json();
+        handleChange(index, 'avatar', result.filePath);
       }
     }
   };
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-6">Editar Testimonios</h2>
-      <Tabs className="space-y-4">
-        <TabsList className="">
-          {testimonios.map((testimonio) => (
-            <TabsTrigger
-              key={testimonio.id}
-              value={`testimonio-${testimonio.id}`}
-              onClick={() => setSelectedTestimonio(testimonio)}
-            >
-              {testimonio.nombre}
-            </TabsTrigger>
-          ))}
+      <h2 className="text-xl font-bold mb-4">Editar Testimonios</h2>
+      <Tabs>
+        <TabsList>
+          <TabsTrigger value="testimonio-0">Testimonio 1</TabsTrigger>
+          <TabsTrigger value="testimonio-1">Testimonio 2</TabsTrigger>
         </TabsList>
-        {selectedTestimonio && (
-          <TabsContent value={`testimonio-${selectedTestimonio.id}`} className="p-4 rounded-md shadow-md dark:bg-slate-800">
-            <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Nombre:</label>
+
+        <TabsContent value="testimonio-0" className="p-4 rounded-md shadow-md dark:bg-slate-800">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(0); }}>
+            <div>
+              <label className="block font-semibold mb-2">Nombre</label>
               <input
                 type="text"
-                value={selectedTestimonio.nombre}
-                onChange={(e) =>
-                  setSelectedTestimonio({ ...selectedTestimonio, nombre: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md p-2"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={editedTestimonios[0]?.nombre || ""}
+                onChange={(e) => handleChange(0, 'nombre', e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Testimonio:</label>
+            <div>
+              <label className="block font-semibold mb-2">Testimonio</label>
               <textarea
-                value={selectedTestimonio.testimonio}
-                onChange={(e) =>
-                  setSelectedTestimonio({ ...selectedTestimonio, testimonio: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md p-2 resize-none"
+                className="w-full p-2 border border-gray-300 rounded resize-none"
                 rows={4}
+                value={editedTestimonios[0]?.testimonio || ""}
+                onChange={(e) => handleChange(0, 'testimonio', e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold mb-1 dark:text-blue-500">Avatar:</label>
+            <div>
+              <label className="block font-semibold mb-2">Avatar</label>
               <input
                 type="file"
-                onChange={handleImageUpload}
+                onChange={(e) => handleImageUpload(0, e)}
                 className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
-              {selectedTestimonio.avatar && (
+              {editedTestimonios[0]?.avatar && (
                 <img
-                  src={selectedTestimonio.avatar}
-                  alt={selectedTestimonio.nombre}
+                  src={editedTestimonios[0]?.avatar}
+                  alt={editedTestimonios[0]?.nombre}
                   className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300"
                 />
               )}
             </div>
-            <Button onClick={handleSubmit} className="">Actualizar Testimonio</Button>
-          </TabsContent>
-        )}
+            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="testimonio-1" className="p-4 rounded-md shadow-md dark:bg-slate-800">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(1); }}>
+            <div>
+              <label className="block font-semibold mb-2">Nombre</label>
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={editedTestimonios[1]?.nombre || ""}
+                onChange={(e) => handleChange(1, 'nombre', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-2">Testimonio</label>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded resize-none"
+                rows={4}
+                value={editedTestimonios[1]?.testimonio || ""}
+                onChange={(e) => handleChange(1, 'testimonio', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-2">Avatar</label>
+              <input
+                type="file"
+                onChange={(e) => handleImageUpload(1, e)}
+                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+              {editedTestimonios[1]?.avatar && (
+                <img
+                  src={editedTestimonios[1]?.avatar}
+                  alt={editedTestimonios[1]?.nombre}
+                  className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300"
+                />
+              )}
+            </div>
+            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
+          </form>
+        </TabsContent>
       </Tabs>
     </div>
   );

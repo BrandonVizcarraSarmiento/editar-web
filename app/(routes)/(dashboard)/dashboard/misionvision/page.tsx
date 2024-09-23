@@ -121,7 +121,7 @@ const EditMisionVision = () => {
                 className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
               {previewImages.mision && (
-                <img src={previewImages.mision} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+                <img src={previewImages.mision} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
               )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
@@ -147,7 +147,7 @@ const EditMisionVision = () => {
                 className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
               {previewImages.vision && (
-                <img src={previewImages.vision} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+                <img src={previewImages.vision} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
               )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
@@ -173,7 +173,7 @@ const EditMisionVision = () => {
                 className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
               />
               {previewImages.valores && (
-                <img src={previewImages.valores} alt="Preview" className="mt-2 h-32 w-auto rounded" />
+                <img src={previewImages.valores} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
               )}
             </div>
             <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>

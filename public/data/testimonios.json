@@ -1,14 +1,14 @@
 [
   {
     "id": 1,
-    "nombre": "hola mundo",
-    "testimonio": "Este es un testimonio de ejemplo.",
-    "avatar": "/img/cafe.jpg"
+    "nombre": "hola mundo edit",
+    "testimonio": "Este es un testimonio de ejemplo. edit",
+    "avatar": "/img/grano.png"
   },
   {
     "id": 2,
-    "nombre": "Cliente 2",
-    "testimonio": "Otro testimonio de ejemplo.",
-    "avatar": "/img/molido.jpg"
+    "nombre": "Cliente 2 edit ",
+    "testimonio": "Otro testimonio de ejemplo. edit",
+    "avatar": "/img/birbisa-2.jpg"
   }
 ]
