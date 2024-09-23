@@ -83,7 +83,7 @@ const Galeria = () => {
                                     <AlertDialogTrigger asChild>
                                         <Button
                                             onClick={() => setSelectedImage(image)}
-                                            className="absolute top-2 right-2 bg-red-500 text-white py-1 px-2 rounded"
+                                            className="absolute top-2 right-2 bg-red-500 text-white border border-gray-300  py-1 px-2 rounded hover:bg-red-600"
                                         >
                                             Eliminar
                                         </Button>
@@ -99,7 +99,7 @@ const Galeria = () => {
                                             <AlertDialogCancel>Cancelar</AlertDialogCancel>
                                             <AlertDialogAction
                                                 onClick={handleDelete}
-                                                className="bg-red-500 text-white"
+                                                className="bg-red-500 text-white hover:bg-red-600"
                                             >
                                                 Eliminar
                                             </AlertDialogAction>
