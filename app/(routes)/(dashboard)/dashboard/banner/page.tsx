@@ -56,30 +56,30 @@ const EditBanner = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
-      <h1 className="text-2xl font-bold mb-4 dark:text-blue-500">Edita el Banner</h1>
-      <label className="mb-4">
+      <h1 className="text-3xl font-bold mb-6 dark:text-blue-500">Edita el Banner</h1>
+      <label className="mb-6">
         <input
           type="file"
           accept="image/*"
           onChange={handleImageChange}
           className="hidden"
         />
-        <span className="inline-block px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow cursor-pointer hover:bg-blue-600 transition duration-300">
+        <span className="inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow cursor-pointer hover:bg-blue-600 transition duration-300">
           Seleccionar Archivo
         </span>
       </label>
 
       {imagePreview && (
-        <div className="flex flex-col items-center justify-center mt-4">
-          <h2 className="text-lg font-semibold mb-2 dark:text-blue-500">Vista previa de la imagen seleccionada:</h2>
+        <div className="flex flex-col items-center justify-center mt-6">
+          <h2 className="text-xl font-semibold mb-4 dark:text-blue-500">Vista previa de la imagen seleccionada:</h2>
           <img
             src={imagePreview}
             alt="Vista previa del banner"
-            className="w-72 h-auto mb-4 rounded-lg shadow-md"
+            className="w-96 h-auto mb-6 rounded-lg shadow-md"
           />
           <button
             onClick={handleConfirmImage}
-            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-300"
+            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-300"
           >
             Aceptar
           </button>
