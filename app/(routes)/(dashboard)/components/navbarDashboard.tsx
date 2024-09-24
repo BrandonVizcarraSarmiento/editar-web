@@ -11,7 +11,7 @@ const NavbarDashboard = () => {
                 </div>
 
                 {/* Opciones de navegación centradas */}
-                <nav className="space-y-2 px-4 flex-1 flex flex-col text-white ">
+                <nav className="space-y-2 px-4 flex-1 flex flex-col">
 
                     <Link href="/dashboard/banner" className="flex items-center p-2  hover:bg-gray-500 rounded">
                         Banner
