@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EditRedSocial from "../../components/editRedSocialTab";
 
 type RedesData = {
     whatsapp: string;
@@ -69,49 +69,31 @@ const EditRedes = () => {
                     <TabsTrigger value="facebook">Facebook</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="whatsapp" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-                    <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('whatsapp'); }}>
-                        <div>
-                            <label className="block font-semibold mb-2">Enlace de WhatsApp</label>
-                            <input
-                                className="w-full p-2 border border-gray-300 rounded"
-                                type="text"
-                                value={data.whatsapp}
-                                onChange={(e) => setData({ ...data, whatsapp: e.target.value })}
-                            />
-                        </div>
-                        <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-                    </form>
+                <TabsContent value="whatsapp">
+                    <EditRedSocial
+                        platform="whatsapp"
+                        url={data.whatsapp}
+                        handleChange={(value) => setData({ ...data, whatsapp: value })}
+                        handleSubmit={() => handleSubmit('whatsapp')}
+                    />
                 </TabsContent>
 
-                <TabsContent value="instagram" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-                    <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('instagram'); }}>
-                        <div>
-                            <label className="block font-semibold mb-2">Enlace de Instagram</label>
-                            <input
-                                className="w-full p-2 border border-gray-300 rounded"
-                                type="text"
-                                value={data.instagram}
-                                onChange={(e) => setData({ ...data, instagram: e.target.value })}
-                            />
-                        </div>
-                        <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-                    </form>
+                <TabsContent value="instagram">
+                    <EditRedSocial
+                        platform="instagram"
+                        url={data.instagram}
+                        handleChange={(value) => setData({ ...data, instagram: value })}
+                        handleSubmit={() => handleSubmit('instagram')}
+                    />
                 </TabsContent>
 
-                <TabsContent value="facebook" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-                    <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('facebook'); }}>
-                        <div>
-                            <label className="block font-semibold mb-2">Enlace de Facebook</label>
-                            <input
-                                className="w-full p-2 border border-gray-300 rounded"
-                                type="text"
-                                value={data.facebook}
-                                onChange={(e) => setData({ ...data, facebook: e.target.value })}
-                            />
-                        </div>
-                        <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-                    </form>
+                <TabsContent value="facebook">
+                    <EditRedSocial
+                        platform="facebook"
+                        url={data.facebook}
+                        handleChange={(value) => setData({ ...data, facebook: value })}
+                        handleSubmit={() => handleSubmit('facebook')}
+                    />
                 </TabsContent>
             </Tabs>
         </div>

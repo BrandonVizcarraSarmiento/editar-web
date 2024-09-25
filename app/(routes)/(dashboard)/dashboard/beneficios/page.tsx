@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EditBeneficioTab from "../../components/editBeneficioTab";
+
 
 type Beneficio = {
   pregunta: string;
@@ -58,77 +60,34 @@ const EditBeneficio = () => {
           {/* Agrega más según la cantidad de beneficios que tengas */}
         </TabsList>
 
-        <TabsContent value="beneficio-0" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-            <div>
-              <label className="block font-semibold mb-2">Pregunta</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={editedBeneficios[0]?.pregunta || ""}
-                onChange={(e) => handleChange(0, 'pregunta', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Respuesta</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={editedBeneficios[0]?.respuesta || ""}
-                onChange={(e) => handleChange(0, 'respuesta', e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+        <TabsContent value="beneficio-0">
+          <EditBeneficioTab
+            index={0}
+            beneficio={editedBeneficios[0]}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </TabsContent>
 
-        <TabsContent value="beneficio-1" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-            <div>
-              <label className="block font-semibold mb-2">Pregunta</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={editedBeneficios[1]?.pregunta || ""}
-                onChange={(e) => handleChange(1, 'pregunta', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Respuesta</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={editedBeneficios[1]?.respuesta || ""}
-                onChange={(e) => handleChange(1, 'respuesta', e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+        <TabsContent value="beneficio-1">
+          <EditBeneficioTab
+            index={1}
+            beneficio={editedBeneficios[1]}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </TabsContent>
 
-        <TabsContent value="beneficio-2" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-            <div>
-              <label className="block font-semibold mb-2">Pregunta</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={editedBeneficios[2]?.pregunta || ""}
-                onChange={(e) => handleChange(2, 'pregunta', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Respuesta</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={editedBeneficios[2]?.respuesta || ""}
-                onChange={(e) => handleChange(2, 'respuesta', e.target.value)}
-              />
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+        <TabsContent value="beneficio-2">
+          <EditBeneficioTab
+            index={2}
+            beneficio={editedBeneficios[2]}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
         </TabsContent>
+
+        {/* Agrega más TabsContent según la cantidad de beneficios que tengas */}
       </Tabs>
     </div>
   );

@@ -1,13 +1,13 @@
 {
   "quienesSomos": {
-    "texto": "Texto 2 edit de Quienes Somos gggg"
+    "texto": "Texto 2 edit de Quienes Somos hola 1002"
   },
   "seccion1": {
-    "texto": "Texto des la misión 123",
-    "imagen": "/img/3-siete procesos.jpg"
+    "texto": "Texto des la misión hola2",
+    "imagen": "/img/5-preProducion.jpeg"
   },
   "seccion2": {
-    "texto": "Texto de la visión 2354",
-    "imagen": "/img/5-preProducion.jpeg"
+    "texto": "Texto de la visión hola2",
+    "imagen": "/img/cafe.jpg"
   }
 }

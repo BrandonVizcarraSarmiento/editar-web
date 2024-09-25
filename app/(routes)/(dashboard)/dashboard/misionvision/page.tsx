@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EditSection from "../../components/EditSection";
+
 
 type SectionData = {
   texto: string;
@@ -33,7 +34,6 @@ const EditMisionVision = () => {
       const res = await fetch("/api/misionvision/get");
       const result = await res.json();
       setData(result);
-      // Establecer las imágenes de vista previa desde el resultado de la API
       setPreviewImages({
         mision: result.mision.imagen,
         vision: result.vision.imagen,
@@ -65,7 +65,7 @@ const EditMisionVision = () => {
     if (e.target.files && e.target.files.length > 0) {
       const formData = new FormData();
       formData.append("file", e.target.files[0]);
-      formData.append("type", section); // Añadir el tipo aquí
+      formData.append("type", section);
       const res = await fetch("/api/misionvision/upload", {
         method: "POST",
         body: formData,
@@ -76,7 +76,6 @@ const EditMisionVision = () => {
           ...prev,
           [section]: { ...prev[section], imagen: result.filePath },
         }));
-        // Previsualiza la imagen
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -101,83 +100,44 @@ const EditMisionVision = () => {
           <TabsTrigger value="vision">Visión</TabsTrigger>
           <TabsTrigger value="valores">Valores</TabsTrigger>
         </TabsList>
-        <TabsContent value="mision" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('mision'); }}>
-            <div>
-              <label className="block font-semibold mb-2">Texto de Misión</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={data.mision.texto}
-                onChange={(e) => setData({ ...data, mision: { ...data.mision, texto: e.target.value } })}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Imagen de Misión</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'mision')}
-                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
-              />
-              {previewImages.mision && (
-                <img src={previewImages.mision} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
-              )}
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+
+        <TabsContent value="mision">
+          <EditSection
+            sectionName="Misión"
+            sectionData={data.mision}
+            previewImage={previewImages.mision}
+            handleTextChange={(value) =>
+              setData({ ...data, mision: { ...data.mision, texto: value } })
+            }
+            handleFileUpload={(e) => handleFileUpload(e, "mision")}
+            handleSubmit={() => handleSubmit("mision")}
+          />
         </TabsContent>
-        <TabsContent value="vision" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('vision'); }}>
-            <div>
-              <label className="block font-semibold mb-2">Texto de Visión</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={data.vision.texto}
-                onChange={(e) => setData({ ...data, vision: { ...data.vision, texto: e.target.value } })}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Imagen de Visión</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'vision')}
-                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
-              />
-              {previewImages.vision && (
-                <img src={previewImages.vision} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
-              )}
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+
+        <TabsContent value="vision">
+          <EditSection
+            sectionName="Visión"
+            sectionData={data.vision}
+            previewImage={previewImages.vision}
+            handleTextChange={(value) =>
+              setData({ ...data, vision: { ...data.vision, texto: value } })
+            }
+            handleFileUpload={(e) => handleFileUpload(e, "vision")}
+            handleSubmit={() => handleSubmit("vision")}
+          />
         </TabsContent>
-        <TabsContent value="valores" className="p-4 rounded-md shadow-md dark:bg-slate-800">
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSubmit('valores'); }}>
-            <div>
-              <label className="block font-semibold mb-2">Texto de Valores</label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded resize-none"
-                rows={4}
-                value={data.valores.texto}
-                onChange={(e) => setData({ ...data, valores: { ...data.valores, texto: e.target.value } })}
-              />
-            </div>
-            <div>
-              <label className="block font-semibold mb-2">Imagen de Valores</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileUpload(e, 'valores')}
-                className="block border border-gray-300 rounded-md p-2 cursor-pointer file:mr-2 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-500 file:text-white hover:file:bg-blue-600"
-              />
-              {previewImages.valores && (
-                <img src={previewImages.valores} alt="Preview" className="w-32 h-32 object-cover mt-2 rounded-md border border-gray-300" />
-              )}
-            </div>
-            <Button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Guardar Cambios</Button>
-          </form>
+
+        <TabsContent value="valores">
+          <EditSection
+            sectionName="Valores"
+            sectionData={data.valores}
+            previewImage={previewImages.valores}
+            handleTextChange={(value) =>
+              setData({ ...data, valores: { ...data.valores, texto: value } })
+            }
+            handleFileUpload={(e) => handleFileUpload(e, "valores")}
+            handleSubmit={() => handleSubmit("valores")}
+          />
         </TabsContent>
       </Tabs>
     </div>
