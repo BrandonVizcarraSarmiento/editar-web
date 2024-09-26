@@ -1,4 +1,4 @@
-"use client"; // Añade esta línea al principio del archivo
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";

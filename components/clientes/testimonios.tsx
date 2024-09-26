@@ -43,7 +43,7 @@ const Testimonios = () => {
       <div className="w-full max-w-6xl">
         {testimonios.map((testimonio) => (
           <div key={testimonio.id}>
-            <Alert className="flex items-start bg-slate-100 border-slate-300 mb-4">
+            <Alert className="flex items-start bg-slate-200 p-4 rounded-lg mb-4 dark:text-white dark:bg-transparent dark:hover:bg-slate-950">
               <Avatar className="mr-4">
                 <AvatarImage src={testimonio.avatar} alt={testimonio.nombre} />
                 <AvatarFallback>{testimonio.nombre.charAt(0)}</AvatarFallback>
