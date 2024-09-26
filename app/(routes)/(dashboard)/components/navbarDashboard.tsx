@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import MenuMobileDashboard from "./menuMobileDashboard";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const NavbarDashboard = () => {
+    const router = useRouter();
+
+    const handleLogout = () => {
+        // Eliminar la cookie de usuario
+        Cookies.remove("usuario"); // Asegúrate de que el nombre de la cookie es el correcto
+
+        // Redirigir al usuario a la página de login
+        router.push("/login");
+    };
+
     return (
         <div className="flex">
             <aside className="hidden lg:flex w-64 shadow-md flex-col justify-between">
@@ -36,7 +48,8 @@ const NavbarDashboard = () => {
                 </nav>
                 {/* Botón de cerrar sesión en la parte inferior */}
                 <div className="px-4 mb-6">
-                    <Button className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center justify-center">
+                    <Button className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center justify-center"
+                        onClick={handleLogout}>
                         Cerrar Sesión
                     </Button>
                 </div>
