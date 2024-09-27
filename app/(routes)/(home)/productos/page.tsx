@@ -1,24 +1,17 @@
 "use client";
 import { useState, useEffect } from 'react';
-
 import Navbar from "@/components/clientes/navbar";
 import Productos from "./components/productos";
 import Slider from "./components/slider";
 import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
 import { useRouter } from 'next/navigation';
-
-interface Producto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  imagen: string;
-}
+import { Producto } from "@/types/producto"; // Importamos la interfaz
 
 const SeccionProductos = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const router = useRouter();
+
   useEffect(() => {
     const fetchProductos = async () => {
       try {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -8,14 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Productos from "./productos";
-
-interface Producto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  imagen: string;
-}
+import { Producto } from "@/types/producto";
 
 const Slider: React.FC<{ productos: Producto[] }> = ({ productos }) => {
   return (

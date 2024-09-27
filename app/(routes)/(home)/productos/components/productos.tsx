@@ -1,13 +1,13 @@
 
 import ProductoNombrePrecio from "./productoNombrePrecio";
 
-interface ProductoProps {
+interface Producto {
     nombre: string;
     precio: number;
     imagen: string;
 }
 
-const Productos: React.FC<ProductoProps> = ({ nombre, precio, imagen }) => {
+const Productos: React.FC<Producto> = ({ nombre, precio, imagen }) => {
     return (
         <div className="relative rounded-md border-2 border-transparent hover:border-cyan-400 transition-colors duration-300 cursor-pointer">
             <img
