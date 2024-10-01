@@ -1,34 +1,28 @@
 "use client";
-import { useState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
 import Navbar from "@/components/clientes/navbar";
 import Productos from "./components/productos";
 import Slider from "./components/slider";
 import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
-import { useRouter } from 'next/navigation';
-import { Producto } from "@/types/producto"; // Importamos la interfaz
+import { useGetProductos } from '@/api/useGetProductos';
 
 const SeccionProductos = () => {
-  const [productos, setProductos] = useState<Producto[]>([]);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/productos');
-        const data = await response.json();
-        setProductos(data);
-      } catch (error) {
-        console.error("Error fetching products: ", error);
-      }
-    };
-
-    fetchProductos();
-  }, []);
+  const { productos, loading, error } = useGetProductos(); // Usamos el hook
 
   const handleProductoClick = (id: number) => {
     router.push(`/productos/${id}`); // Redirige a la página del producto
   };
+
+  if (loading) {
+    return <p>Cargando productos...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div>
