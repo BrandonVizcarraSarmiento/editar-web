@@ -45,6 +45,12 @@ const NavbarDashboard = () => {
                     <Link href="/dashboard/galeria" className="flex items-center p-2 hover:bg-gray-500 rounded">
                         Galeria
                     </Link>
+                    <Link href="/dashboard/productos" className="flex items-center p-2 hover:bg-gray-500 rounded">
+                        Productos
+                    </Link>
+                    <Link href="/dashboard/novedades" className="flex items-center p-2 hover:bg-gray-500 rounded">
+                        Novedades
+                    </Link>
                 </nav>
                 {/* Botón de cerrar sesión en la parte inferior */}
                 <div className="px-4 mb-6">
