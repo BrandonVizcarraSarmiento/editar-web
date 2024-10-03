@@ -15,6 +15,8 @@ const EditarProductoDialog = ({ producto, onSave, children }: EditarProductoDial
     const [descripcion, setDescripcion] = useState("");
     const [precio, setPrecio] = useState(0);
     const [imagen, setImagen] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         if (producto) {
@@ -26,6 +28,11 @@ const EditarProductoDialog = ({ producto, onSave, children }: EditarProductoDial
     }, [producto]);
 
     const handleSave = async () => {
+        if (!nombre || !descripcion || precio <= 0 || !imagen) {
+            setError("Todos los campos son obligatorios y el precio debe ser mayor a 0.");
+            return;
+        }
+
         const updatedProducto: Producto = {
             ...producto!,
             nombre,
@@ -44,21 +51,23 @@ const EditarProductoDialog = ({ producto, onSave, children }: EditarProductoDial
 
             if (response.ok) {
                 onSave(updatedProducto);
+                setIsOpen(false); // Cerrar el diálogo si se edita correctamente
             } else {
-                console.error("Error al editar el producto.");
+                setError("Error al editar el producto.");
             }
         } catch (error) {
-            console.error("Error de conexión: ", error);
+            setError("Error de conexión.");
         }
     };
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Editar Producto</DialogTitle>
                 </DialogHeader>
+                {error && <p className="text-red-500">{error}</p>}
                 <form>
                     <div className="space-y-4">
                         <Input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre del producto" />

@@ -15,6 +15,8 @@ const AgregarProductoDialog = ({ productos, onSave, children }: AgregarProductoD
     const [descripcion, setDescripcion] = useState("");
     const [precio, setPrecio] = useState(0);
     const [imagen, setImagen] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     const getNextId = () => {
         if (productos.length === 0) return 1;
@@ -22,6 +24,11 @@ const AgregarProductoDialog = ({ productos, onSave, children }: AgregarProductoD
     };
 
     const handleSave = async () => {
+        if (!nombre || !descripcion || precio <= 0 || !imagen) {
+            setError("Todos los campos son obligatorios y el precio debe ser mayor a 0.");
+            return;
+        }
+
         const nuevoProducto: Producto = {
             id: getNextId(),
             nombre,
@@ -41,21 +48,23 @@ const AgregarProductoDialog = ({ productos, onSave, children }: AgregarProductoD
 
             if (response.ok) {
                 onSave(nuevoProducto);
+                setIsOpen(false); // Cerrar el diálogo si se agrega correctamente
             } else {
-                console.error("Error al agregar el producto.");
+                setError("Error al agregar el producto.");
             }
         } catch (error) {
-            console.error("Error de conexión: ", error);
+            setError("Error de conexión.");
         }
     };
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Agregar Producto</DialogTitle>
                 </DialogHeader>
+                {error && <p className="text-red-500">{error}</p>}
                 <form>
                     <div className="space-y-4">
                         <Input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre del producto" />

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -23,6 +23,20 @@ const SeccionProductos = () => {
     const [productoActual, setProductoActual] = useState<Producto | null>(null);
     const [productoAEliminar, setProductoAEliminar] = useState<Producto | null>(null);
 
+    // Estado para manejar el toast
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    // Función para mostrar el toast
+    const mostrarToast = (mensaje: string) => {
+        setToastMessage(mensaje);
+        setShowToast(true);
+        setTimeout(() => {
+            setShowToast(false);
+            setToastMessage(null);
+        }, 3000); // Ocultar el toast después de 3 segundos
+    };
+
     // Obtener productos de la API
     useEffect(() => {
         const fetchProductos = async () => {
@@ -40,7 +54,15 @@ const SeccionProductos = () => {
 
     // Guardar o actualizar un producto
     const handleSaveProducto = (producto: Producto) => {
-        setProductos((prev) => prev.map((p) => (p.id === producto.id ? producto : p)));
+        const isEdit = productos.some((p) => p.id === producto.id);
+
+        if (isEdit) {
+            setProductos((prev) => prev.map((p) => (p.id === producto.id ? producto : p)));
+            mostrarToast("El producto ha sido editado correctamente.");
+        } else {
+            setProductos((prev) => [...prev, producto]);
+            mostrarToast("Se agregó un nuevo producto.");
+        }
         setProductoActual(null);
     };
 
@@ -53,6 +75,7 @@ const SeccionProductos = () => {
 
             if (response.ok) {
                 setProductos((prev) => prev.filter((producto) => producto.id !== id));
+                mostrarToast("El producto ha sido eliminado.");
             } else {
                 console.error("Error al eliminar el producto.");
             }
@@ -69,11 +92,18 @@ const SeccionProductos = () => {
 
     return (
         <div className="p-8">
+            {/* Mostrar el toast */}
+            {showToast && toastMessage && (
+                <div className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
+                    {toastMessage}
+                </div>
+            )}
+
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-bold">Gestión de Productos</h1>
                 <AgregarProductoDialog
                     productos={productos}
-                    onSave={(nuevoProducto) => setProductos((prev) => [...prev, nuevoProducto])}
+                    onSave={handleSaveProducto}
                 >
                     <Button>
                         <PlusIcon className="mr-2 h-4 w-4" />
