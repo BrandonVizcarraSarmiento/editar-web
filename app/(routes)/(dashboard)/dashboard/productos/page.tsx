@@ -18,6 +18,14 @@ import {
 import AgregarProductoDialog from "./components/AgregarProductoDialog";
 import EditarProductoDialog from "./components/EditarProductoDialog";
 
+// Función para limitar la descripción a 50 caracteres
+const limitarDescripcion = (descripcion: string, limiteCaracteres: number) => {
+    if (descripcion.length > limiteCaracteres) {
+        return descripcion.slice(0, limiteCaracteres) + "...";
+    }
+    return descripcion;
+};
+
 const SeccionProductos = () => {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [productoActual, setProductoActual] = useState<Producto | null>(null);
@@ -126,7 +134,7 @@ const SeccionProductos = () => {
                     {productos.map((producto) => (
                         <TableRow key={producto.id}>
                             <TableCell>{producto.nombre}</TableCell>
-                            <TableCell>{producto.descripcion}</TableCell>
+                            <TableCell>{limitarDescripcion(producto.descripcion, 40)}</TableCell>
                             <TableCell>S/. {producto.precio.toFixed(2)}</TableCell>
                             <TableCell>
                                 <img src={producto.imagen} alt={producto.nombre} className="w-16 h-16 object-cover" />

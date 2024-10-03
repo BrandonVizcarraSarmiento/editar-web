@@ -7,6 +7,14 @@ interface OtrosEventosProps {
   eventos: Novedad[];
 }
 
+// Función para limitar el texto a un máximo de 50 letras
+const limitarTexto = (texto: string, limiteLetras: number) => {
+  if (texto.length > limiteLetras) {
+    return texto.slice(0, limiteLetras) + "..."; // Mostrar solo los primeros 50 caracteres
+  }
+  return texto;
+};
+
 const OtrosEventos: React.FC<OtrosEventosProps> = ({ eventos }) => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -28,7 +36,7 @@ const OtrosEventos: React.FC<OtrosEventosProps> = ({ eventos }) => {
                 <div className="text-sm text-justify">
                   <CardTitle className="mb-2">{evento.titulo}</CardTitle>
                   <CardDescription className="mb-2">{formatearFecha(evento.fecha)}</CardDescription>
-                  <CardDescription>{evento.info}</CardDescription>
+                  <CardDescription>{limitarTexto(evento.info, 20)}</CardDescription>
                 </div>
               </CardContent>
             </Link>

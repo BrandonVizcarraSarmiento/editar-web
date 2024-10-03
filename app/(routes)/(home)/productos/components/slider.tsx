@@ -9,8 +9,15 @@ import {
 } from "@/components/ui/carousel";
 import Productos from "./productos";
 import { Producto } from "@/types/producto";
+import { useRouter } from 'next/navigation'; // Importar el hook de navegación
 
 const Slider: React.FC<{ productos: Producto[] }> = ({ productos }) => {
+  const router = useRouter(); // Inicializar el router
+
+  const handleProductoClick = (id: number) => {
+    router.push(`/productos/${id}`); // Redirigir al producto al hacer clic
+  };
+
   return (
     <div className="mt-10 mb-10 p-4">
       <Carousel
@@ -22,7 +29,7 @@ const Slider: React.FC<{ productos: Producto[] }> = ({ productos }) => {
         <CarouselContent>
           {productos.map((producto) => (
             <CarouselItem key={producto.id} className="md:basis-1/2 lg:basis-1/3">
-              <div>
+              <div onClick={() => handleProductoClick(producto.id)}> {/* Agregar el evento onClick */}
                 <Card>
                   <Productos
                     nombre={producto.nombre}
@@ -39,6 +46,6 @@ const Slider: React.FC<{ productos: Producto[] }> = ({ productos }) => {
       </Carousel>
     </div>
   );
-}
+};
 
 export default Slider;
