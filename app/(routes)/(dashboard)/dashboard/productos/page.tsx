@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input"; // Componente de Input para el buscador
-import { Select, SelectTrigger, SelectContent } from "@/components/ui/select"; // Componente de Select para el selector de columnas
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"; // Componente de Select para el selector de columnas
 import { Checkbox } from "@/components/ui/checkbox"; // Checkbox dentro del select
 import { PencilIcon, TrashIcon, PlusIcon } from "lucide-react";
 import { Producto } from "@/types/producto";
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import AgregarProductoDialog from "./components/AgregarProductoDialog";
 import EditarProductoDialog from "./components/EditarProductoDialog";
+import { PaginationProductos } from "./components/pagination";
 
 // Función para limitar la descripción a 50 caracteres
 const limitarDescripcion = (descripcion: string, limiteCaracteres: number) => {
@@ -123,17 +124,9 @@ const SeccionProductos = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredProductos.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Cambiar de página
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (currentPage < Math.ceil(filteredProductos.length / itemsPerPage)) {
-            setCurrentPage(currentPage + 1);
-        }
+    // Manejar el cambio de página
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
     };
 
     // Manejar la visibilidad de columnas
@@ -250,16 +243,13 @@ const SeccionProductos = () => {
                 </TableBody>
             </Table>
 
-            {/* Paginación */}
-            <div className="flex justify-between mt-4">
-                <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                    Anterior
-                </Button>
-                <span>Página {currentPage} de {Math.ceil(filteredProductos.length / itemsPerPage)}</span>
-                <Button onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredProductos.length / itemsPerPage)}>
-                    Siguiente
-                </Button>
-            </div>
+            {/* Paginación con el componente de Shadcn */}
+            <PaginationProductos
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                totalItems={filteredProductos.length}
+                itemsPerPage={itemsPerPage}
+            />
         </div>
     );
 };
