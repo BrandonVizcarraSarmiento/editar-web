@@ -23,10 +23,7 @@ import EditarProductoDialog from "./components/EditarProductoDialog";
 import { PaginationProductos } from "./components/pagination";
 
 const limitarDescripcion = (descripcion: string, limiteCaracteres: number) => {
-    if (descripcion.length > limiteCaracteres) {
-        return descripcion.slice(0, limiteCaracteres) + "...";
-    }
-    return descripcion;
+    return descripcion.length > limiteCaracteres ? descripcion.slice(0, limiteCaracteres) + "..." : descripcion;
 };
 
 const SeccionProductos = () => {
@@ -39,12 +36,11 @@ const SeccionProductos = () => {
         descripcion: true,
         precio: true,
         imagen: true,
+        destacado: true, // Agregado para permitir la visibilidad de la columna Destacado
         acciones: true,
     });
-
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
-
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -63,9 +59,7 @@ const SeccionProductos = () => {
                 const response = await fetch("http://localhost:4000/api/productos");
                 const data = await response.json();
                 setProductos(data);
-                const destacadosIds = data
-                    .filter((producto: Producto) => producto.destacado)
-                    .map((producto: Producto) => producto.id);
+                const destacadosIds = data.filter((producto: Producto) => producto.destacado).map((producto: Producto) => producto.id);
                 setProductosDestacados(destacadosIds);
             } catch (error) {
                 console.error("Error al obtener productos: ", error);
@@ -78,6 +72,7 @@ const SeccionProductos = () => {
     const handleSaveProducto = (producto: Producto) => {
         const isEdit = productos.some((p) => p.id === producto.id);
 
+        // Actualizar la lista de destacados
         if (isEdit) {
             setProductos((prev) => prev.map((p) => (p.id === producto.id ? producto : p)));
             mostrarToast("El producto ha sido editado correctamente.");
@@ -85,6 +80,10 @@ const SeccionProductos = () => {
             setProductos((prev) => [...prev, producto]);
             mostrarToast("Se agregó un nuevo producto.");
         }
+
+        // Actualizar productos destacados
+        actualizarDestacados();
+
         setProductoActual(null);
     };
 
@@ -97,6 +96,7 @@ const SeccionProductos = () => {
             if (response.ok) {
                 setProductos((prev) => prev.filter((producto) => producto.id !== id));
                 mostrarToast("El producto ha sido eliminado.");
+                actualizarDestacados(); // Refrescar destacados después de eliminar
             } else {
                 console.error("Error al eliminar el producto.");
             }
@@ -109,33 +109,29 @@ const SeccionProductos = () => {
         setProductoActual(producto);
     };
 
+    const actualizarDestacados = () => {
+        const nuevosDestacados = productos.filter((producto) => producto.destacado).map((producto) => producto.id);
+        setProductosDestacados(nuevosDestacados);
+    };
+
     const handleDestacadoChange = async (productoId: number, isChecked: boolean) => {
         if (isChecked) {
-            // Verificar si ya hay 3 productos destacados
             if (productosDestacados.length >= 3) {
-                // Si ya hay 3, desmarcar el primero en la lista de destacados
-                const productoAReemplazar = productosDestacados[0]; // O el que elijas reemplazar
+                const productoAReemplazar = productosDestacados[0];
                 setProductosDestacados((prev) => {
                     const nuevosDestacados = prev.filter((id) => id !== productoAReemplazar);
-                    return [...nuevosDestacados, productoId]; // Añadir el nuevo destacado
+                    return [...nuevosDestacados, productoId];
                 });
-
-                // Actualizar el estado del producto que fue reemplazado
                 await actualizarProductoDestacado(productoAReemplazar, false);
             } else {
                 setProductosDestacados((prev) => [...prev, productoId]);
             }
         } else {
-            // Asegurarse de que al desmarcar no queden menos de 3 destacados
-            if (productosDestacados.length <= 3) {
-                mostrarToast("Debes tener al menos 3 productos destacados.");
-                return;
-            }
             setProductosDestacados((prev) => prev.filter((id) => id !== productoId));
         }
 
-        // Actualizar en la base de datos
         await actualizarProductoDestacado(productoId, isChecked);
+        actualizarDestacados(); // Refrescar destacados después de cambiar el estado
     };
 
     const actualizarProductoDestacado = async (productoId: number, isChecked: boolean) => {
@@ -184,7 +180,11 @@ const SeccionProductos = () => {
 
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-bold">Gestión de Productos</h1>
-                <AgregarProductoDialog productos={productos} onSave={handleSaveProducto}>
+                <AgregarProductoDialog
+                    productos={productos}
+                    onSave={handleSaveProducto}
+                    onUpdateDestacados={actualizarDestacados}
+                >
                     <Button>
                         <PlusIcon className="mr-2 h-4 w-4" />
                         Agregar Producto
@@ -224,7 +224,7 @@ const SeccionProductos = () => {
                         {visibleColumns.descripcion && <TableHead>Descripción</TableHead>}
                         {visibleColumns.precio && <TableHead>Precio</TableHead>}
                         {visibleColumns.imagen && <TableHead>Imagen</TableHead>}
-                        <TableHead>Destacado</TableHead>
+                        {visibleColumns.destacado && <TableHead>Destacado</TableHead>} {/* Condicional para la columna Destacado */}
                         {visibleColumns.acciones && <TableHead>Acciones</TableHead>}
                     </TableRow>
                 </TableHeader>
@@ -232,25 +232,30 @@ const SeccionProductos = () => {
                     {currentItems.map((producto) => (
                         <TableRow key={producto.id}>
                             {visibleColumns.nombre && <TableCell>{producto.nombre}</TableCell>}
-                            {visibleColumns.descripcion && (
-                                <TableCell>{limitarDescripcion(producto.descripcion, 40)}</TableCell>
-                            )}
-                            {visibleColumns.precio && <TableCell>S/. {producto.precio.toFixed(2)}</TableCell>}
+                            {visibleColumns.descripcion && <TableCell>{limitarDescripcion(producto.descripcion, 50)}</TableCell>}
+                            {visibleColumns.precio && <TableCell>{producto.precio.toFixed(2)}</TableCell>}
                             {visibleColumns.imagen && (
                                 <TableCell>
                                     <img src={producto.imagen} alt={producto.nombre} className="w-16 h-16 object-cover" />
                                 </TableCell>
                             )}
-                            <TableCell>
-                                <Checkbox
-                                    checked={productosDestacados.includes(producto.id)}
-                                    onCheckedChange={(isChecked: boolean) => handleDestacadoChange(producto.id, isChecked)}
-                                />
-                            </TableCell>
+                            {visibleColumns.destacado && ( // Condicional para la celda de Destacado
+                                <TableCell>
+                                    <Checkbox
+                                        checked={productosDestacados.includes(producto.id)}
+                                        onCheckedChange={(isChecked: boolean) => handleDestacadoChange(producto.id, isChecked)}
+                                    />
+                                </TableCell>
+                            )}
                             {visibleColumns.acciones && (
                                 <TableCell>
                                     <div className="flex gap-2">
-                                        <EditarProductoDialog producto={producto} onSave={handleSaveProducto}>
+                                        <EditarProductoDialog
+                                            producto={producto}
+                                            onSave={handleSaveProducto}
+                                            productos={productos}
+                                            onUpdateDestacados={actualizarDestacados}
+                                        >
                                             <Button variant="outline" size="sm">
                                                 <PencilIcon className="h-4 w-4 mr-2" />
                                                 <span>Editar</span>

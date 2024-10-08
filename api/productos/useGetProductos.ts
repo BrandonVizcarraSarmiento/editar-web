@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Producto } from "@/types/producto";
 
 export function useGetProductos() {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/productos`; // Utilizamos la variable de entorno
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/productos`;
     const [productos, setProductos] = useState<Producto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>("");
@@ -11,11 +11,19 @@ export function useGetProductos() {
         const fetchProductos = async () => {
             try {
                 const response = await fetch(url);
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error("Error al obtener los productos");
+                }
+                const data: Producto[] = await response.json();
                 setProductos(data);
-                setLoading(false);
-            } catch (err: any) {
-                setError("Error al obtener los productos");
+            } catch (err) {
+                // Aquí especificamos que err puede ser un Error
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError("Error desconocido");
+                }
+            } finally {
                 setLoading(false);
             }
         };

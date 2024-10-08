@@ -5,6 +5,6 @@ export interface Producto {
     precio: number;
     imagen: string;
     destacado: boolean;
-    createdAt: string;  // Añadir createdAt
-    updatedAt: string;  // Añadir updatedAt
+    createdAt: string;
+    updatedAt: string;
 }

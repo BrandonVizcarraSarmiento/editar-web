@@ -6,7 +6,7 @@ import Productos from "./components/productos";
 import Slider from "./components/slider";
 import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
-import { useGetProductos } from '@/api/useGetProductos';
+import { useGetProductos } from '@/api/productos/useGetProductos';
 
 const SeccionProductos = () => {
   const router = useRouter();
