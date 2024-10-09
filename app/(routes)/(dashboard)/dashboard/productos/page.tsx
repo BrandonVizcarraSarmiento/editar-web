@@ -36,7 +36,7 @@ const SeccionProductos = () => {
         descripcion: true,
         precio: true,
         imagen: true,
-        destacado: true, // Agregado para permitir la visibilidad de la columna Destacado
+        destacado: true,
         acciones: true,
     });
     const [currentPage, setCurrentPage] = useState(1);
@@ -59,8 +59,7 @@ const SeccionProductos = () => {
                 const response = await fetch("http://localhost:4000/api/productos");
                 const data = await response.json();
                 setProductos(data);
-                const destacadosIds = data.filter((producto: Producto) => producto.destacado).map((producto: Producto) => producto.id);
-                setProductosDestacados(destacadosIds);
+                actualizarDestacados(data); // Actualizar destacados al cargar productos
             } catch (error) {
                 console.error("Error al obtener productos: ", error);
             }
@@ -72,7 +71,6 @@ const SeccionProductos = () => {
     const handleSaveProducto = (producto: Producto) => {
         const isEdit = productos.some((p) => p.id === producto.id);
 
-        // Actualizar la lista de destacados
         if (isEdit) {
             setProductos((prev) => prev.map((p) => (p.id === producto.id ? producto : p)));
             mostrarToast("El producto ha sido editado correctamente.");
@@ -81,9 +79,7 @@ const SeccionProductos = () => {
             mostrarToast("Se agregó un nuevo producto.");
         }
 
-        // Actualizar productos destacados
-        actualizarDestacados();
-
+        actualizarDestacados([...productos, producto]);
         setProductoActual(null);
     };
 
@@ -96,7 +92,7 @@ const SeccionProductos = () => {
             if (response.ok) {
                 setProductos((prev) => prev.filter((producto) => producto.id !== id));
                 mostrarToast("El producto ha sido eliminado.");
-                actualizarDestacados(); // Refrescar destacados después de eliminar
+                actualizarDestacados(productos.filter((producto) => producto.id !== id));
             } else {
                 console.error("Error al eliminar el producto.");
             }
@@ -105,50 +101,9 @@ const SeccionProductos = () => {
         }
     };
 
-    const handleEditProducto = (producto: Producto) => {
-        setProductoActual(producto);
-    };
-
-    const actualizarDestacados = () => {
-        const nuevosDestacados = productos.filter((producto) => producto.destacado).map((producto) => producto.id);
+    const actualizarDestacados = (productosList: Producto[]) => {
+        const nuevosDestacados = productosList.filter((producto) => producto.destacado).map((producto) => producto.id);
         setProductosDestacados(nuevosDestacados);
-    };
-
-    const handleDestacadoChange = async (productoId: number, isChecked: boolean) => {
-        if (isChecked) {
-            if (productosDestacados.length >= 3) {
-                const productoAReemplazar = productosDestacados[0];
-                setProductosDestacados((prev) => {
-                    const nuevosDestacados = prev.filter((id) => id !== productoAReemplazar);
-                    return [...nuevosDestacados, productoId];
-                });
-                await actualizarProductoDestacado(productoAReemplazar, false);
-            } else {
-                setProductosDestacados((prev) => [...prev, productoId]);
-            }
-        } else {
-            setProductosDestacados((prev) => prev.filter((id) => id !== productoId));
-        }
-
-        await actualizarProductoDestacado(productoId, isChecked);
-        actualizarDestacados(); // Refrescar destacados después de cambiar el estado
-    };
-
-    const actualizarProductoDestacado = async (productoId: number, isChecked: boolean) => {
-        try {
-            const response = await fetch(`http://localhost:4000/api/productos/${productoId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ destacado: isChecked }),
-            });
-            if (!response.ok) {
-                console.error("Error al actualizar el producto.");
-            }
-        } catch (error) {
-            console.error("Error de conexión: ", error);
-        }
     };
 
     const filteredProductos = productos.filter((producto) =>
@@ -224,7 +179,7 @@ const SeccionProductos = () => {
                         {visibleColumns.descripcion && <TableHead>Descripción</TableHead>}
                         {visibleColumns.precio && <TableHead>Precio</TableHead>}
                         {visibleColumns.imagen && <TableHead>Imagen</TableHead>}
-                        {visibleColumns.destacado && <TableHead>Destacado</TableHead>} {/* Condicional para la columna Destacado */}
+                        {visibleColumns.destacado && <TableHead>Destacado</TableHead>}
                         {visibleColumns.acciones && <TableHead>Acciones</TableHead>}
                     </TableRow>
                 </TableHeader>
@@ -239,11 +194,11 @@ const SeccionProductos = () => {
                                     <img src={producto.imagen} alt={producto.nombre} className="w-16 h-16 object-cover" />
                                 </TableCell>
                             )}
-                            {visibleColumns.destacado && ( // Condicional para la celda de Destacado
+                            {visibleColumns.destacado && (
                                 <TableCell>
                                     <Checkbox
                                         checked={productosDestacados.includes(producto.id)}
-                                        onCheckedChange={(isChecked: boolean) => handleDestacadoChange(producto.id, isChecked)}
+                                        disabled
                                     />
                                 </TableCell>
                             )}
@@ -293,9 +248,9 @@ const SeccionProductos = () => {
 
             <PaginationProductos
                 currentPage={currentPage}
-                onPageChange={handlePageChange}
-                totalItems={filteredProductos.length}
                 itemsPerPage={itemsPerPage}
+                totalItems={filteredProductos.length}
+                onPageChange={handlePageChange}
             />
         </div>
     );
