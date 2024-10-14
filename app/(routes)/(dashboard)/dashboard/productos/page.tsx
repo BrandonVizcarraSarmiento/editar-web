@@ -53,7 +53,7 @@ const SeccionProductos = () => {
     };
 
     return (
-        <div className="p-8">
+        <div className="p-4">
             {showToast && toastMessage && (
                 <div className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
                     {toastMessage}

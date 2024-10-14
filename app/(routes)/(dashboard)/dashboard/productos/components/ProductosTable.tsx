@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectContent } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { Producto } from "@/types/producto";
@@ -33,16 +33,22 @@ const limitarDescripcion = (descripcion: string, limiteCaracteres: number) => {
 const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos }) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [productosDestacados, setProductosDestacados] = useState<number[]>([]);
-    const [visibleColumns, setVisibleColumns] = useState({
-        nombre: true,
-        descripcion: true,
-        precio: true,
-        imagen: true,
-        destacado: true,
-        acciones: true,
+    const [visibleColumns, setVisibleColumns] = useState(() => {
+        const savedColumns = localStorage.getItem("visibleColumns");
+        return savedColumns ? JSON.parse(savedColumns) : {
+            nombre: true,
+            descripcion: true,
+            precio: true,
+            imagen: true,
+            destacado: true,
+            acciones: true,
+        };
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 3;
+    const [itemsPerPage, setItemsPerPage] = useState(() => {
+        const savedItemsPerPage = localStorage.getItem("itemsPerPage");
+        return savedItemsPerPage ? parseInt(savedItemsPerPage) : 5;
+    });
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -61,9 +67,16 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
     };
 
     useEffect(() => {
-        // Inicializa los productos destacados al cargar el componente
         actualizarDestacados(productos);
     }, [productos]);
+
+    useEffect(() => {
+        localStorage.setItem("visibleColumns", JSON.stringify(visibleColumns));
+    }, [visibleColumns]);
+
+    useEffect(() => {
+        localStorage.setItem("itemsPerPage", itemsPerPage.toString());
+    }, [itemsPerPage]);
 
     const filteredProductos = productos.filter((producto) =>
         producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -78,7 +91,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
     };
 
     const handleColumnVisibility = (column: keyof typeof visibleColumns) => {
-        setVisibleColumns((prev) => ({
+        setVisibleColumns((prev: typeof visibleColumns) => ({
             ...prev,
             [column]: !prev[column],
         }));
@@ -91,7 +104,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
             });
 
             if (response.ok) {
-                setProductos((prev) => prev.filter((producto) => producto.id !== id));
+                setProductos((prev: Producto[]) => prev.filter((producto) => producto.id !== id));
                 mostrarToast("El producto ha sido eliminado.");
                 actualizarDestacados(productos.filter((producto) => producto.id !== id));
             } else {
@@ -103,7 +116,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
     };
 
     return (
-        <div className="p-8">
+        <div>
             {showToast && toastMessage && (
                 <div className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
                     {toastMessage}
@@ -133,6 +146,16 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                         ))}
                     </SelectContent>
                 </Select>
+                <Select onValueChange={(value) => setItemsPerPage(parseInt(value))}>
+                    <SelectTrigger className="w-[180px]">
+                        <span>Filas por página</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="3">3 filas</SelectItem>
+                        <SelectItem value="5">5 filas</SelectItem>
+                        <SelectItem value="10">10 filas</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             <Table>
@@ -160,7 +183,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                             {visibleColumns.destacado && (
                                 <TableCell>
                                     <Checkbox
-                                        checked={producto.destacado} // Mostrar el estado correcto del producto
+                                        checked={producto.destacado}
                                         disabled
                                     />
                                 </TableCell>
@@ -171,11 +194,11 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                                         <EditarProductoDialog
                                             producto={producto}
                                             onSave={(productoActualizado: Producto) => {
-                                                setProductos((prev) =>
+                                                setProductos((prev: Producto[]) =>
                                                     prev.map((p) => (p.id === productoActualizado.id ? productoActualizado : p))
                                                 );
                                                 mostrarToast("El producto ha sido editado correctamente.");
-                                                actualizarDestacados(productos); // Actualizar destacados después de editar
+                                                actualizarDestacados(productos);
                                             }}
                                             productos={productos}
                                             onUpdateDestacados={actualizarDestacados}
