@@ -41,7 +41,6 @@ const EditarProductoDialog = ({ producto, onSave, onUpdateDestacados, productos,
         const destacadosActuales = productos.filter(p => p.destacado);
         const esDestacadoActual = producto?.destacado;
 
-        // Manejo del cambio de destacado
         if (destacado && !esDestacadoActual && destacadosActuales.length >= 3) {
             const productoAMover = destacadosActuales[0];
             await fetch(`http://localhost:4000/api/productos/${productoAMover.id}`, {

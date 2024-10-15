@@ -1,25 +1,16 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { Producto } from "@/types/producto";
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "@/components/ui/alert-dialog";
 import EditarProductoDialog from "./editarProducto";
 import { PaginationProductos } from "./pagination";
+import EliminarProductoDialog from "./eliminarProducto";
 
 interface TablaProductosProps {
     productos: Producto[];
@@ -97,22 +88,10 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
         }));
     };
 
-    const eliminarProducto = async (id: number) => {
-        try {
-            const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
-                method: "DELETE",
-            });
-
-            if (response.ok) {
-                setProductos((prev: Producto[]) => prev.filter((producto) => producto.id !== id));
-                mostrarToast("El producto ha sido eliminado.");
-                actualizarDestacados(productos.filter((producto) => producto.id !== id));
-            } else {
-                console.error("Error al eliminar el producto.");
-            }
-        } catch (error) {
-            console.error("Error de conexión: ", error);
-        }
+    const eliminarProducto = (id: number) => {
+        setProductos((prev: Producto[]) => prev.filter((producto) => producto.id !== id));
+        actualizarDestacados(productos.filter((producto) => producto.id !== id));
+        mostrarToast("El producto ha sido eliminado.");
     };
 
     return (
@@ -208,29 +187,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                                                 <span>Editar</span>
                                             </Button>
                                         </EditarProductoDialog>
-
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm">
-                                                    <TrashIcon className="h-4 w-4 mr-2" />
-                                                    <span>Eliminar</span>
-                                                </Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>¿Deseas eliminar este producto?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        Esta acción no podrá deshacerse.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => eliminarProducto(producto.id)}>
-                                                        Eliminar
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                        <EliminarProductoDialog id={producto.id} onDelete={eliminarProducto} />
                                     </div>
                                 </TableCell>
                             )}
