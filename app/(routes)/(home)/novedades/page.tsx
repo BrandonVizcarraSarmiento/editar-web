@@ -4,7 +4,7 @@ import EventoPrincipal from "./components/eventoPrincipal";
 import OtrosEventos from "./components/otrosEventos";
 import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
-import { useGetNovedades } from "@/api/useGetNovedades";
+import { useGetNovedades } from "@/api/novedades/useGetNovedades";
 
 const Novedades = () => {
   const { novedades, loading, error } = useGetNovedades();

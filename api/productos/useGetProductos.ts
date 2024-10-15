@@ -17,7 +17,6 @@ export function useGetProductos() {
                 const data: Producto[] = await response.json();
                 setProductos(data);
             } catch (err) {
-                // Aquí especificamos que err puede ser un Error
                 if (err instanceof Error) {
                     setError(err.message);
                 } else {

@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Producto } from "@/types/producto";
+import { useEditProducto } from "@/api/productos/useEditProducto";
+import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
 
 interface EditarProductoDialogProps {
     producto: Producto | null;
@@ -43,11 +45,12 @@ const EditarProductoDialog = ({ producto, onSave, onUpdateDestacados, productos,
 
         if (destacado && !esDestacadoActual && destacadosActuales.length >= 3) {
             const productoAMover = destacadosActuales[0];
-            await fetch(`http://localhost:4000/api/productos/${productoAMover.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...productoAMover, destacado: false }),
-            });
+            const resultado = await removeOldestDestacado(productoAMover);
+
+            if (!resultado) {
+                setError("Error al remover el producto más antiguo de los destacados.");
+                return;
+            }
         }
 
         const updatedProducto: Producto = {
@@ -61,21 +64,15 @@ const EditarProductoDialog = ({ producto, onSave, onUpdateDestacados, productos,
         };
 
         try {
-            const response = await fetch(`http://localhost:4000/api/productos/${producto?.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedProducto),
-            });
+            const response = await useEditProducto(producto!, updatedProducto);
 
-            if (response.ok) {
+            if (response) {
                 onSave(updatedProducto);
                 onUpdateDestacados([...productos.filter(p => p.id !== producto?.id), updatedProducto]);
                 setIsOpen(false);
-            } else {
-                setError("Error al editar el producto.");
             }
-        } catch {
-            setError("Error de conexión.");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error desconocido");
         }
     };
 

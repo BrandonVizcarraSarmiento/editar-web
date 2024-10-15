@@ -12,6 +12,7 @@ import {
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { TrashIcon } from "lucide-react";
+import { useDeleteProducto } from "@/api/productos/useDeleteProducto";
 
 interface EliminarProductoDialogProps {
     id: number;
@@ -20,18 +21,12 @@ interface EliminarProductoDialogProps {
 
 const EliminarProductoDialog: React.FC<EliminarProductoDialogProps> = ({ id, onDelete }) => {
     const eliminarProducto = async () => {
-        try {
-            const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
-                method: "DELETE",
-            });
+        const success = await useDeleteProducto(id);
 
-            if (response.ok) {
-                onDelete(id);
-            } else {
-                console.error("Error al eliminar el producto.");
-            }
-        } catch (error) {
-            console.error("Error de conexión: ", error);
+        if (success) {
+            onDelete(id);
+        } else {
+            console.error("Error al eliminar el producto.");
         }
     };
 
@@ -39,7 +34,7 @@ const EliminarProductoDialog: React.FC<EliminarProductoDialogProps> = ({ id, onD
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
-                    <TrashIcon className="h-4 w-4 mr-2" /> {/* Ícono de eliminar */}
+                    <TrashIcon className="h-4 w-4 mr-2" />
                     <span>Eliminar</span>
                 </Button>
             </AlertDialogTrigger>

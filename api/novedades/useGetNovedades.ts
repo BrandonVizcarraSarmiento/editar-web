@@ -13,7 +13,6 @@ export function useGetNovedades() {
                 const response = await fetch(url);
                 const data: Novedad[] = await response.json();
 
-                // Ordenar las novedades por fecha, suponiendo que la propiedad se llame 'fecha'
                 const novedadesOrdenadas = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
                 setNovedades(novedadesOrdenadas);

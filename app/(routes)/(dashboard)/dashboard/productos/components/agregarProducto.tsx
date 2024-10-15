@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Producto } from "@/types/producto";
+import { useAddProducto } from "@/api/productos/useAddProducto";
+import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
 
 interface AgregarProductoDialogProps {
     productos: Producto[];
@@ -78,32 +80,16 @@ const AgregarProductoDialog = ({
             updatedAt: new Date().toISOString(),
         };
 
-        try {
-            const response = await fetch("http://localhost:4000/api/productos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(nuevoProducto),
-            });
+        const success = await useAddProducto(nuevoProducto);
 
-            if (response.ok) {
-                onSave(nuevoProducto);
-                onUpdateDestacados([...productos, nuevoProducto]);
-                resetForm();
-                setIsOpen(false);
-            } else {
-                setError("Error al agregar el producto.");
-            }
-        } catch {
-            setError("Error de conexión.");
+        if (success) {
+            onSave(nuevoProducto);
+            onUpdateDestacados([...productos, nuevoProducto]);
+            resetForm();
+            setIsOpen(false);
+        } else {
+            setError("Error al agregar el producto.");
         }
-    };
-
-    const removeOldestDestacado = async (productoAMover: Producto) => {
-        await fetch(`http://localhost:4000/api/productos/${productoAMover.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...productoAMover, destacado: false }),
-        });
     };
 
     const resetForm = () => {
