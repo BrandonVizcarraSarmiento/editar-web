@@ -1,15 +1,23 @@
-"use client";
+"use client"
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import AgregarProductoDialog from "./components/agregarProducto";
 import TablaProductos from "./components/ProductosTable";
 import { Producto } from "@/types/producto";
 import { PlusIcon } from "lucide-react";
+import { useGetProductos } from "@/api/productos/useGetProductos";
 
 const SeccionProductos = () => {
+    const { productos: fetchedProductos, loading, error } = useGetProductos();
     const [productos, setProductos] = useState<Producto[]>([]);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (fetchedProductos) {
+            setProductos(fetchedProductos);
+        }
+    }, [fetchedProductos]);
 
     const mostrarToast = (mensaje: string) => {
         setToastMessage(mensaje);
@@ -20,30 +28,16 @@ const SeccionProductos = () => {
         }, 3000);
     };
 
-    useEffect(() => {
-        const fetchProductos = async () => {
-            try {
-                const response = await fetch("http://localhost:4000/api/productos");
-                const data = await response.json();
-                setProductos(data);
-            } catch (error) {
-                console.error("Error al obtener productos: ", error);
-            }
-        };
-
-        fetchProductos();
-    }, []);
-
     const handleSaveProducto = (producto: Producto) => {
         const isEdit = productos.some((p) => p.id === producto.id);
 
         if (isEdit) {
-            setProductos((prev) =>
-                prev.map((p) => (p.id === producto.id ? producto : p))
+            setProductos((prev: Producto[]) =>
+                prev.map((p: Producto) => (p.id === producto.id ? producto : p))
             );
             mostrarToast("El producto ha sido editado correctamente.");
         } else {
-            setProductos((prev) => [...prev, producto]);
+            setProductos((prev: Producto[]) => [...prev, producto]);
             mostrarToast("Se agregó un nuevo producto.");
         }
     };
@@ -51,6 +45,14 @@ const SeccionProductos = () => {
     const actualizarDestacados = (productosList: Producto[]) => {
         // Lógica para actualizar destacados, si es necesario
     };
+
+    if (loading) {
+        return <div>Cargando productos...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="p-4">

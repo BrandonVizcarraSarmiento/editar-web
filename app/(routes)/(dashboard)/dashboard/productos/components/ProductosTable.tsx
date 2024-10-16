@@ -102,15 +102,15 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                 </div>
             )}
 
-            <div className="mb-4 flex items-center space-x-4">
+            <div className="mb-4 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
                 <Input
                     placeholder="Buscar producto..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full"
+                    className="w-full md:w-auto"
                 />
                 <Select>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full md:w-[180px]">
                         <span>Seleccionar columnas</span>
                     </SelectTrigger>
                     <SelectContent>
@@ -126,7 +126,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                     </SelectContent>
                 </Select>
                 <Select onValueChange={(value) => setItemsPerPage(parseInt(value))}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full md:w-[180px]">
                         <span>Filas por página</span>
                     </SelectTrigger>
                     <SelectContent>
@@ -136,7 +136,6 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                     </SelectContent>
                 </Select>
             </div>
-
             <Table>
                 <TableHeader>
                     <TableRow>
