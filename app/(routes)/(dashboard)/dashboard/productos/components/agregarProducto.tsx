@@ -14,19 +14,19 @@ import { Producto } from "@/types/producto";
 import { useAddProducto } from "@/api/productos/useAddProducto";
 import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
 
-interface AgregarProductoDialogProps {
+interface AgregarProductoProps {
     productos: Producto[];
     onSave: (producto: Producto) => void;
     onUpdateDestacados: (productos: Producto[]) => void;
     children: ReactNode;
 }
 
-const AgregarProductoDialog = ({
+const AgregarProducto = ({
     productos,
     onSave,
     onUpdateDestacados,
     children,
-}: AgregarProductoDialogProps) => {
+}: AgregarProductoProps) => {
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
@@ -158,4 +158,4 @@ const AgregarProductoDialog = ({
     );
 };
 
-export default AgregarProductoDialog;
+export default AgregarProducto;

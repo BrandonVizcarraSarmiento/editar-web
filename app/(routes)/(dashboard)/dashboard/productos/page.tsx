@@ -1,11 +1,11 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import AgregarProductoDialog from "./components/agregarProducto";
-import TablaProductos from "./components/ProductosTable";
+import TablaProductos from "./components/tablaProducto";
 import { Producto } from "@/types/producto";
 import { PlusIcon } from "lucide-react";
 import { useGetProductos } from "@/api/productos/useGetProductos";
+import AgregarProducto from "./components/agregarProducto";
 
 const SeccionProductos = () => {
     const { productos: fetchedProductos, loading, error } = useGetProductos();
@@ -64,7 +64,7 @@ const SeccionProductos = () => {
 
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-bold">Gestión de Productos</h1>
-                <AgregarProductoDialog
+                <AgregarProducto
                     productos={productos}
                     onSave={handleSaveProducto}
                     onUpdateDestacados={actualizarDestacados}
@@ -73,7 +73,7 @@ const SeccionProductos = () => {
                         <PlusIcon className="mr-2 h-4 w-4" />
                         Agregar Producto
                     </Button>
-                </AgregarProductoDialog>
+                </AgregarProducto>
             </div>
 
             <TablaProductos productos={productos} setProductos={setProductos} />

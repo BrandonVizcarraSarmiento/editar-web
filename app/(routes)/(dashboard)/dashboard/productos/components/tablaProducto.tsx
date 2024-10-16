@@ -8,9 +8,9 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import { PencilIcon } from "lucide-react";
 import { Producto } from "@/types/producto";
-import EditarProductoDialog from "./editarProducto";
 import { PaginationProductos } from "./pagination";
-import EliminarProductoDialog from "./eliminarProducto";
+import EliminarProducto from "./eliminarProducto";
+import EditarProducto from "./editarProducto";
 
 interface TablaProductosProps {
     productos: Producto[];
@@ -169,7 +169,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                             {visibleColumns.acciones && (
                                 <TableCell>
                                     <div className="flex gap-2">
-                                        <EditarProductoDialog
+                                        <EditarProducto
                                             producto={producto}
                                             onSave={(productoActualizado: Producto) => {
                                                 setProductos((prev: Producto[]) =>
@@ -185,8 +185,8 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                                                 <PencilIcon className="h-4 w-4 mr-2" />
                                                 <span>Editar</span>
                                             </Button>
-                                        </EditarProductoDialog>
-                                        <EliminarProductoDialog id={producto.id} onDelete={eliminarProducto} />
+                                        </EditarProducto>
+                                        <EliminarProducto id={producto.id} onDelete={eliminarProducto} />
                                     </div>
                                 </TableCell>
                             )}

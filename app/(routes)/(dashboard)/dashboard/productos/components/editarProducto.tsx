@@ -7,7 +7,7 @@ import { Producto } from "@/types/producto";
 import { useEditProducto } from "@/api/productos/useEditProducto";
 import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
 
-interface EditarProductoDialogProps {
+interface EditarProductoProps {
     producto: Producto | null;
     onSave: (producto: Producto) => void;
     onUpdateDestacados: (productos: Producto[]) => void;
@@ -15,7 +15,7 @@ interface EditarProductoDialogProps {
     children: ReactNode;
 }
 
-const EditarProductoDialog = ({ producto, onSave, onUpdateDestacados, productos, children }: EditarProductoDialogProps) => {
+const EditarProducto = ({ producto, onSave, onUpdateDestacados, productos, children }: EditarProductoProps) => {
     const [nombre, setNombre] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [precio, setPrecio] = useState(0);
@@ -132,4 +132,4 @@ const EditarProductoDialog = ({ producto, onSave, onUpdateDestacados, productos,
     );
 };
 
-export default EditarProductoDialog;
+export default EditarProducto;
