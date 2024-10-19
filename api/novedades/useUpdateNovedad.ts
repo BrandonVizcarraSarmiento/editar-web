@@ -1,23 +1,23 @@
 import { Novedad } from "@/types/novedad";
 
-export async function useUpdateNovedad(novedad: Novedad): Promise<boolean> {
+export async function useUpdateNovedad(novedad: Novedad, updatedNovedad: Novedad) {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/novedades/${novedad.id}`;
 
     try {
         const response = await fetch(url, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(novedad),
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedNovedad),
         });
 
         if (!response.ok) {
-            console.error("Error al actualizar la novedad.");
-            return false;
+            throw new Error("Error al actualizar la novedad.");
         }
 
-        return true;
+        return await response.json();
     } catch (error) {
-        console.error("Error de conexión: ", error);
-        return false;
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
     }
 }

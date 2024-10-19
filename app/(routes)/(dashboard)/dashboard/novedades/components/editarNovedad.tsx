@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,20 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Novedad } from "@/types/novedad"; // Tipo Novedad
-import { useUpdateNovedad } from "@/api/novedades/useUpdateNovedad"; // Implementación de la API
+import { Novedad } from "@/types/novedad";
+import { useUpdateNovedad } from "@/api/novedades/useUpdateNovedad";
 
 interface EditarNovedadProps {
-    novedad: Novedad; // La novedad que se va a editar
+    novedad: Novedad;
     onUpdate: (novedad: Novedad) => void;
-    children: ReactNode;
+    children: React.ReactNode;
 }
 
-const EditarNovedad = ({
-    novedad,
-    onUpdate,
-    children,
-}: EditarNovedadProps) => {
+const EditarNovedad = ({ novedad, onUpdate, children }: EditarNovedadProps) => {
     const [formData, setFormData] = useState({
         titulo: "",
         info: "",
@@ -45,7 +41,7 @@ const EditarNovedad = ({
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
@@ -60,7 +56,7 @@ const EditarNovedad = ({
         }
 
         const updatedNovedad: Novedad = {
-            ...novedad, // Mantener los mismos valores de ID y fechas
+            ...novedad,
             titulo,
             info,
             imagen,
@@ -68,12 +64,11 @@ const EditarNovedad = ({
             updatedAt: new Date().toISOString(),
         };
 
-        const success = await useUpdateNovedad(updatedNovedad);
-
-        if (success) {
-            onUpdate(updatedNovedad);
+        try {
+            const result = await useUpdateNovedad(novedad, updatedNovedad);
+            onUpdate(result);
             setIsOpen(false);
-        } else {
+        } catch (error) {
             setError("Error al actualizar la novedad.");
         }
     };

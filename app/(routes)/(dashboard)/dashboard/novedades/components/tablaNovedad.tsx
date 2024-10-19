@@ -7,6 +7,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import { PencilIcon } from "lucide-react";
 import { Novedad } from "@/types/novedad";
+import EliminarNovedad from "./eliminarNovedad";
+import EditarNovedad from "./editarNovedad";
 
 interface TablaNovedadProps {
     novedades: Novedad[];
@@ -19,8 +21,21 @@ const limitarDescripcion = (info: string, limiteCaracteres: number) => {
 
 const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [visibleColumns, setVisibleColumns] = useState(() => {
+        const savedColumns = localStorage.getItem("visibleColumnsNovedades");
+        return savedColumns ? JSON.parse(savedColumns) : {
+            titulo: true,
+            info: true,
+            imagen: true,
+            fecha: true,
+            acciones: true,
+        };
+    });
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const [itemsPerPage, setItemsPerPage] = useState(() => {
+        const savedItemsPerPage = localStorage.getItem("itemsPerPageNovedades");
+        return savedItemsPerPage ? parseInt(savedItemsPerPage) : 5;
+    });
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -33,6 +48,14 @@ const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) 
         }, 3000);
     };
 
+    useEffect(() => {
+        localStorage.setItem("visibleColumnsNovedades", JSON.stringify(visibleColumns));
+    }, [visibleColumns]);
+
+    useEffect(() => {
+        localStorage.setItem("itemsPerPageNovedades", itemsPerPage.toString());
+    }, [itemsPerPage]);
+
     const filteredNovedades = novedades.filter((novedad) =>
         novedad.titulo.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -43,6 +66,13 @@ const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) 
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    const handleColumnVisibility = (column: keyof typeof visibleColumns) => {
+        setVisibleColumns((prev: typeof visibleColumns) => ({
+            ...prev,
+            [column]: !prev[column],
+        }));
     };
 
     const eliminarNovedad = (id: number) => {
@@ -65,6 +95,22 @@ const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) 
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full md:w-auto"
                 />
+                <Select>
+                    <SelectTrigger className="w-full md:w-[180px]">
+                        <span>Seleccionar columnas</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                        {Object.keys(visibleColumns).map((col) => (
+                            <div key={col} className="flex items-center px-2 py-1">
+                                <Checkbox
+                                    checked={visibleColumns[col as keyof typeof visibleColumns]}
+                                    onCheckedChange={() => handleColumnVisibility(col as keyof typeof visibleColumns)}
+                                />
+                                <label className="ml-2 capitalize">{col}</label>
+                            </div>
+                        ))}
+                    </SelectContent>
+                </Select>
                 <Select onValueChange={(value) => setItemsPerPage(parseInt(value))}>
                     <SelectTrigger className="w-full md:w-[180px]">
                         <span>Filas por página</span>
@@ -76,36 +122,45 @@ const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) 
                     </SelectContent>
                 </Select>
             </div>
+
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Título</TableHead>
-                        <TableHead>Info</TableHead>
-                        <TableHead>Imagen</TableHead>
-                        <TableHead>Fecha</TableHead>
-                        <TableHead>Acciones</TableHead>
+                        {visibleColumns.titulo && <TableHead>Título</TableHead>}
+                        {visibleColumns.info && <TableHead>Info</TableHead>}
+                        {visibleColumns.imagen && <TableHead>Imagen</TableHead>}
+                        {visibleColumns.fecha && <TableHead>Fecha</TableHead>}
+                        {visibleColumns.acciones && <TableHead>Acciones</TableHead>}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {currentItems.map((novedad) => (
                         <TableRow key={novedad.id}>
-                            <TableCell>{novedad.titulo}</TableCell>
-                            <TableCell>{limitarDescripcion(novedad.info, 50)}</TableCell>
-                            <TableCell>
-                                <img src={novedad.imagen} alt={novedad.titulo} className="w-16 h-16 object-cover" />
-                            </TableCell>
-                            <TableCell>{novedad.fecha}</TableCell>
-                            <TableCell>
-                                <div className="flex gap-2">
-                                    
-                                </div>
-                            </TableCell>
+                            {visibleColumns.titulo && <TableCell>{novedad.titulo}</TableCell>}
+                            {visibleColumns.info && <TableCell>{limitarDescripcion(novedad.info, 50)}</TableCell>}
+                            {visibleColumns.imagen && (
+                                <TableCell>
+                                    <img src={novedad.imagen} alt={novedad.titulo} className="w-16 h-16 object-cover" />
+                                </TableCell>
+                            )}
+                            {visibleColumns.fecha && <TableCell>{novedad.fecha}</TableCell>}
+                            {visibleColumns.acciones && (
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <EditarNovedad novedad={novedad} onUpdate={() => null}>
+                                            <Button variant="outline" size="sm">
+                                                <PencilIcon className="h-4 w-4 mr-2" />
+                                                <span>Editar</span>
+                                            </Button>
+                                        </EditarNovedad>
+                                        <EliminarNovedad id={novedad.id} onDelete={eliminarNovedad} />
+                                    </div>
+                                </TableCell>
+                            )}
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-
-
         </div>
     );
 };
