@@ -8,7 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import { PencilIcon } from "lucide-react";
 import { Producto } from "@/types/producto";
-import { PaginationProductos } from "./pagination";
+import { Paginacion } from "../../../components/paginacion";
 import EliminarProducto from "./eliminarProducto";
 import EditarProducto from "./editarProducto";
 
@@ -195,7 +195,7 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                 </TableBody>
             </Table>
 
-            <PaginationProductos
+            <Paginacion
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
                 totalItems={filteredProductos.length}

@@ -8,19 +8,19 @@ import {
     PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-interface SeccionProductosProps {
+interface paginacionProps {
     currentPage: number;
     onPageChange: (page: number) => void;
     totalItems: number;
     itemsPerPage: number;
 }
 
-export function PaginationProductos({
+export function Paginacion({
     currentPage,
     onPageChange,
     totalItems,
     itemsPerPage,
-}: SeccionProductosProps) {
+}: paginacionProps) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return (

@@ -9,6 +9,7 @@ import { PencilIcon } from "lucide-react";
 import { Novedad } from "@/types/novedad";
 import EliminarNovedad from "./eliminarNovedad";
 import EditarNovedad from "./editarNovedad";
+import { Paginacion } from "../../../components/paginacion";
 
 interface TablaNovedadProps {
     novedades: Novedad[];
@@ -161,6 +162,13 @@ const TablaNovedad: React.FC<TablaNovedadProps> = ({ novedades, setNovedades }) 
                     ))}
                 </TableBody>
             </Table>
+
+            <Paginacion
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                totalItems={filteredNovedades.length}
+                itemsPerPage={itemsPerPage}
+            />
         </div>
     );
 };
