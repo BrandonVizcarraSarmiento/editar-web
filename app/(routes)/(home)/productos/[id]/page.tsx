@@ -6,32 +6,26 @@ import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
 import ImgProducto from '../components/imgProducto';
 import InfoProducto from '../components/infoProducto';
-
-interface Producto {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    imagen: string;
-}
+import { useProductoId } from '@/api/productos/useProductoId';
+import { Producto } from "@/types/producto";
 
 const PageInfoProductos = () => {
-    const { id } = useParams(); // Obtener el ID de la ruta
+    const { id } = useParams();
     const [producto, setProducto] = useState<Producto | null>(null);
 
     useEffect(() => {
+        if (Array.isArray(id)) {
+            console.error("El id no debe ser un array.");
+            return;
+        }
+
         if (id) {
-            const fetchProducto = async () => {
-                try {
-                    const response = await fetch(`http://localhost:4000/api/productos/${id}`);
-                    const data: Producto = await response.json();
-                    setProducto(data);
-                } catch (error) {
-                    console.error("Error fetching product: ", error);
-                }
+            const getProducto = async () => {
+                const data = await useProductoId(id);
+                setProducto(data);
             };
 
-            fetchProducto();
+            getProducto();
         }
     }, [id]);
 

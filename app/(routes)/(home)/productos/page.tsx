@@ -10,10 +10,10 @@ import { useGetProductos } from '@/api/productos/useGetProductos';
 
 const SeccionProductos = () => {
   const router = useRouter();
-  const { productos, loading, error } = useGetProductos(); // Usamos el hook
+  const { productos, loading, error } = useGetProductos();
 
   const handleProductoClick = (id: number) => {
-    router.push(`/productos/${id}`); // Redirige a la página del producto
+    router.push(`/productos/${id}`);
   };
 
   if (loading) {
@@ -24,8 +24,7 @@ const SeccionProductos = () => {
     return <p>Error: {error}</p>;
   }
 
-  // Filtra los productos destacados
-  const productosDestacados = productos.filter(producto => producto.destacado); // Asegúrate de que 'destacado' sea el campo que marca el producto como destacado.
+  const productosDestacados = productos.filter(producto => producto.destacado);
 
   return (
     <div>

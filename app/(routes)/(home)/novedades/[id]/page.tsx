@@ -3,26 +3,19 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/clientes/navbar";
 import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
-import { Novedad } from "@/types/novedad"; // Importamos la interfaz
+import { Novedad } from "@/types/novedad";
 import { formatearFecha } from "@/types/fecha";
+import { useNovedadId } from "@/api/novedades/useNovedadId";
 
 const InfoNovedades = ({ params }: { params: { id: string } }) => {
     const [evento, setEvento] = useState<Novedad | null>(null);
-    const { id } = params; // Extraemos el id de los parámetros de la ruta
+    const { id } = params;
 
     useEffect(() => {
         const fetchEvento = async () => {
             if (id) {
-                try {
-                    const res = await fetch(`http://localhost:4000/api/novedades/${id}`);
-                    if (!res.ok) {
-                        throw new Error("Error fetching evento");
-                    }
-                    const data: Novedad = await res.json();
-                    setEvento(data);
-                } catch (error) {
-                    console.error("Error fetching evento:", error);
-                }
+                const data = await useNovedadId(id);
+                setEvento(data);
             }
         };
 
