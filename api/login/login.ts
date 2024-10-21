@@ -1,7 +1,9 @@
 import Cookies from 'js-cookie';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export async function login(correo: string, password: string) {
-  const response = await fetch('http://localhost:4000/api/auth/login', {
+  const response = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -11,18 +13,16 @@ export async function login(correo: string, password: string) {
 
   const data = await response.json();
 
-  // Verificamos que la respuesta tenga el usuario y el correo
   if (response.ok && data.user && data.user.correo) {
-    Cookies.set('usuario', JSON.stringify(data.user.correo)); // Guardamos el correo del usuario
+    Cookies.set('usuario', JSON.stringify(data.user.correo));
     return { success: true, correo: data.user.correo };
   } else {
     return { success: false, message: data.message || 'Login failed' };
   }
 }
 
-
 export async function register(correo: string, password: string) {
-  const response = await fetch('http://localhost:4000/api/auth/register', { // Asegúrate de usar el puerto correcto aquí
+  const response = await fetch(`${API_URL}/api/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

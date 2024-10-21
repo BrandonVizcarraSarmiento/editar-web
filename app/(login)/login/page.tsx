@@ -5,13 +5,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/utils/api';
+import { login } from '@/api/login/login';
 
 const PageLogin = () => {
-  const [correo, setCorreo] = useState(''); // Actualización para usar 'correo' en lugar de 'username'
+  const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Hook para redirigir
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +19,9 @@ const PageLogin = () => {
 
     try {
       const response = await login(correo, password);
-      
-      // Verificamos si el correo está en la respuesta
+
       if (response.success && response.correo) {
-        router.push('/dashboard'); // Redirige al dashboard
+        router.push('/dashboard');
       } else {
         setError(response.message || 'Invalid credentials');
       }
