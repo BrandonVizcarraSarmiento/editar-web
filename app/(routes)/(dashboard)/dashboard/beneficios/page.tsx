@@ -12,7 +12,6 @@ type Beneficio = {
 type BeneficiosData = Beneficio[];
 
 const EditBeneficio = () => {
-  const [beneficios, setBeneficios] = useState<BeneficiosData>([]);
   const [editedBeneficios, setEditedBeneficios] = useState<BeneficiosData>([]);
 
   useEffect(() => {
@@ -23,8 +22,7 @@ const EditBeneficio = () => {
         return;
       }
       const data = await res.json();
-      setBeneficios(data);
-      setEditedBeneficios(data);
+      setEditedBeneficios(data); // Solo usas este estado
     };
 
     fetchBeneficios();

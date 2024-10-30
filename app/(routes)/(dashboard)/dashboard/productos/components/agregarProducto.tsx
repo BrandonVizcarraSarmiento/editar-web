@@ -66,7 +66,6 @@ const AgregarProducto = ({
 
         const destacadosActuales = productos.filter(p => p.destacado);
         if (destacado && destacadosActuales.length >= 3) {
-            // Editar el producto más antiguo para quitarlo de destacados
             const productoAEditar = destacadosActuales[0];
             const updatedProducto = { ...productoAEditar, destacado: false };
             await editProducto(productoAEditar, updatedProducto);

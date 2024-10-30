@@ -18,7 +18,7 @@ const Testimonios = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/testimonios/get");
+        const res = await fetch("/api/testimonios");
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }

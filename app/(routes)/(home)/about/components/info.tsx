@@ -1,16 +1,27 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 
+interface AboutData {
+    seccion1: {
+        imagen: string;
+        texto: string;
+    };
+    seccion2: {
+        imagen: string;
+        texto: string;
+    };
+}
+
 const Info = () => {
-    const [aboutData, setAboutData] = useState<any>(null);
+    const [aboutData, setAboutData] = useState<AboutData | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("/api/about/get");
+                const res = await fetch("/api/about");
                 const data = await res.json();
                 setAboutData(data);
             } catch (err) {

@@ -13,7 +13,7 @@ const MisionVision = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch("/api/misionvision/get");
+            const res = await fetch("/api/misionvision");
             if (res.ok) {
                 const result = await res.json();
                 setData(result);

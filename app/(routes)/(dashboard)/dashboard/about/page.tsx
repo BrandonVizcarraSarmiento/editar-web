@@ -5,8 +5,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditAboutTab from "../../components/editAboutTab";
 import EditSection from "../../components/EditSection";
 
+// Define la interfaz para los datos de "about"
+interface AboutData {
+  quienesSomos: {
+    texto: string;
+  };
+  seccion1: {
+    texto: string;
+    imagen: string;
+  };
+  seccion2: {
+    texto: string;
+    imagen: string;
+  };
+}
+
 const EditAbout = () => {
-  const [aboutData, setAboutData] = useState<any>(null);
+  const [aboutData, setAboutData] = useState<AboutData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     seccion1: null,
@@ -34,7 +49,7 @@ const EditAbout = () => {
     fetchData();
   }, []);
 
-  const handleTextChange = async (section: string, texto: string, imagen?: string) => {
+  const handleTextChange = async (section: keyof AboutData, texto: string, imagen?: string) => {
     try {
       const res = await fetch("/api/about", {
         method: "POST",
@@ -57,7 +72,7 @@ const EditAbout = () => {
     }
   };
 
-  const handleImageUpload = async (section: string) => {
+  const handleImageUpload = async (section: keyof AboutData) => {
     const file = files[section];
     if (!file) return;
 
@@ -84,13 +99,15 @@ const EditAbout = () => {
     }
   };
 
-  const handleUpdate = async (section: string) => {
+  const handleUpdate = async (section: keyof AboutData) => {
     const imagePath = await handleImageUpload(section);
-    await handleTextChange(section, aboutData[section].texto, imagePath);
-    setFiles({ ...files, [section]: null });
+    if (aboutData) {
+      await handleTextChange(section, aboutData[section].texto, imagePath);
+      setFiles({ ...files, [section]: null });
+    }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, section: string) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, section: keyof AboutData) => {
     if (e.target.files) {
       const file = e.target.files[0];
       setFiles({ ...files, [section]: file });
@@ -107,6 +124,7 @@ const EditAbout = () => {
   };
 
   if (error) return <p>{error}</p>;
+  if (!aboutData) return <p>Cargando...</p>; // Manejo de carga
 
   return (
     <div className="p-4">
@@ -127,7 +145,7 @@ const EditAbout = () => {
         <TabsContent value="seccion1">
           <EditSection
             sectionName="Sección 1"
-            sectionData={aboutData?.seccion1}
+            sectionData={aboutData.seccion1}
             previewImage={previewImages.seccion1}
             handleTextChange={(texto) => setAboutData({ ...aboutData, seccion1: { ...aboutData.seccion1, texto } })}
             handleFileUpload={(e) => handleFileChange(e, 'seccion1')}
@@ -137,7 +155,7 @@ const EditAbout = () => {
         <TabsContent value="seccion2">
           <EditSection
             sectionName="Sección 2"
-            sectionData={aboutData?.seccion2}
+            sectionData={aboutData.seccion2}
             previewImage={previewImages.seccion2}
             handleTextChange={(texto) => setAboutData({ ...aboutData, seccion2: { ...aboutData.seccion2, texto } })}
             handleFileUpload={(e) => handleFileChange(e, 'seccion2')}

@@ -8,7 +8,7 @@ const QuienesSomos = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("/api/about/get");
+                const res = await fetch("/api/about");
                 const data = await res.json();
                 setTexto(data.quienesSomos.texto);
             } catch (err) {

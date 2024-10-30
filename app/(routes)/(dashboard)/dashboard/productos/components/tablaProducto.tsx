@@ -23,7 +23,6 @@ const limitarDescripcion = (descripcion: string, limiteCaracteres: number) => {
 
 const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos }) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [productosDestacados, setProductosDestacados] = useState<number[]>([]);
     const [visibleColumns, setVisibleColumns] = useState(() => {
         const savedColumns = localStorage.getItem("visibleColumns");
         return savedColumns ? JSON.parse(savedColumns) : {
@@ -51,15 +50,6 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
             setToastMessage(null);
         }, 3000);
     };
-
-    const actualizarDestacados = (productosList: Producto[]) => {
-        const nuevosDestacados = productosList.filter((producto) => producto.destacado).map((producto) => producto.id);
-        setProductosDestacados(nuevosDestacados);
-    };
-
-    useEffect(() => {
-        actualizarDestacados(productos);
-    }, [productos]);
 
     useEffect(() => {
         localStorage.setItem("visibleColumns", JSON.stringify(visibleColumns));
@@ -90,7 +80,6 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
 
     const eliminarProducto = (id: number) => {
         setProductos((prev: Producto[]) => prev.filter((producto) => producto.id !== id));
-        actualizarDestacados(productos.filter((producto) => producto.id !== id));
         mostrarToast("El producto ha sido eliminado.");
     };
 
@@ -176,10 +165,9 @@ const TablaProductos: React.FC<TablaProductosProps> = ({ productos, setProductos
                                                     prev.map((p) => (p.id === productoActualizado.id ? productoActualizado : p))
                                                 );
                                                 mostrarToast("El producto ha sido editado correctamente.");
-                                                actualizarDestacados(productos);
                                             }}
                                             productos={productos}
-                                            onUpdateDestacados={actualizarDestacados}
+                                            onUpdateDestacados={() => {}}
                                         >
                                             <Button variant="outline" size="sm">
                                                 <PencilIcon className="h-4 w-4 mr-2" />

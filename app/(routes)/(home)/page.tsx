@@ -4,7 +4,6 @@ import MisionVision from "@/components/clientes/misionVision";
 import Navbar from "@/components/clientes/navbar";
 import Redes from "@/components/clientes/redes";
 import Testimonios from "@/components/clientes/testimonios";
-import ToggleTheme from "@/components/clientes/toggleTheme";
 
 export default function Home() {
   return (

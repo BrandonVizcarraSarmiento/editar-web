@@ -12,7 +12,7 @@ const ensureUploadDirectoryExists = () => {
     }
 };
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     if (!fs.existsSync(jsonPath)) {
         return NextResponse.json({ error: "File not found" }, { status: 404 });
     }

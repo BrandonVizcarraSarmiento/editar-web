@@ -12,14 +12,12 @@ type Testimonio = {
 };
 
 const EditTestimonio = () => {
-  const [testimonios, setTestimonios] = useState<Testimonio[]>([]);
   const [editedTestimonios, setEditedTestimonios] = useState<Testimonio[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/testimonios");
       const data = await res.json();
-      setTestimonios(data);
       setEditedTestimonios(data);
     };
 

@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 
+type AboutData = {
+  quienesSomos: {
+    texto: string;
+  };
+};
+
 type EditAboutTabProps = {
-  aboutData: any;
+  aboutData: AboutData;
   handleTextChange: (value: string) => void;
   handleSubmit: () => void;
 };

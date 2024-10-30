@@ -43,7 +43,11 @@ const SeccionProductos = () => {
     };
 
     const actualizarDestacados = (productosList: Producto[]) => {
-        // Lógica para actualizar destacados, si es necesario
+        // Aquí puedes implementar la lógica para actualizar los destacados
+        setProductos(prev => prev.map(p => ({
+            ...p,
+            destacado: productosList.some(dp => dp.id === p.id) // Actualiza el estado
+        })));
     };
 
     if (loading) {

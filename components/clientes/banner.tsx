@@ -12,7 +12,7 @@ const Banner = () => {
   useEffect(() => {
     const fetchBannerImage = async () => {
       try {
-        const res = await fetch("/api/banner/getBannerImage");
+        const res = await fetch("/api/banner");
         if (res.ok) {
           const data = await res.json();
           setBannerImage(data.image);

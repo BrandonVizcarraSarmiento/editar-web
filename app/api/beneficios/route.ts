@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import fs from "fs";
 import path from "path";
 
 // Maneja tanto GET como POST
-export async function GET(request: NextRequest) {
+export async function GET() { // Eliminar 'request' aquí
   const jsonPath = path.join(process.cwd(), "public", "data", "beneficios.json");
 
   if (!fs.existsSync(jsonPath)) {
@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(beneficiosData);
 }
 
+// La función POST sigue igual
 export async function POST(request: NextRequest) {
   const { beneficios } = await request.json();
 
