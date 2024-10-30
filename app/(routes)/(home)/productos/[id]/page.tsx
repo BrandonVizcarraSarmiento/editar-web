@@ -6,7 +6,7 @@ import Redes from "@/components/clientes/redes";
 import Footer from "@/components/clientes/footer";
 import ImgProducto from '../components/imgProducto';
 import InfoProducto from '../components/infoProducto';
-import { useProductoId } from '@/api/productos/useProductoId';
+import { getProductoById } from '@/api/productos/getProductoById';
 import { Producto } from "@/types/producto";
 
 const PageInfoProductos = () => {
@@ -20,12 +20,12 @@ const PageInfoProductos = () => {
         }
 
         if (id) {
-            const getProducto = async () => {
-                const data = await useProductoId(id);
+            const fetchProducto = async () => {
+                const data = await getProductoById(id);
                 setProducto(data);
             };
 
-            getProducto();
+            fetchProducto();
         }
     }, [id]);
 
