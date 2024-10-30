@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Novedad } from "@/types/novedad";
-import { useUpdateNovedad } from "@/api/novedades/useUpdateNovedad";
+import { updateNovedad } from "@/api/novedades/updateNovedad";
 
 interface EditarNovedadProps {
     novedad: Novedad;
@@ -65,7 +65,7 @@ const EditarNovedad = ({ novedad, onUpdate, children }: EditarNovedadProps) => {
         };
 
         try {
-            const result = await useUpdateNovedad(novedad, updatedNovedad);
+            const result = await updateNovedad(novedad, updatedNovedad);
             onUpdate(result);
             setIsOpen(false);
         } catch (error) {

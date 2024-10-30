@@ -11,8 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Producto } from "@/types/producto";
-import { useAddProducto } from "@/api/productos/useAddProducto";
-import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
+import { addProducto } from "@/api/productos/addProducto";
+import { editProducto } from "@/api/productos/editProducto";
 
 interface AgregarProductoProps {
     productos: Producto[];
@@ -66,7 +66,10 @@ const AgregarProducto = ({
 
         const destacadosActuales = productos.filter(p => p.destacado);
         if (destacado && destacadosActuales.length >= 3) {
-            await removeOldestDestacado(destacadosActuales[0]);
+            // Editar el producto más antiguo para quitarlo de destacados
+            const productoAEditar = destacadosActuales[0];
+            const updatedProducto = { ...productoAEditar, destacado: false };
+            await editProducto(productoAEditar, updatedProducto);
         }
 
         const nuevoProducto: Producto = {
@@ -80,7 +83,7 @@ const AgregarProducto = ({
             updatedAt: new Date().toISOString(),
         };
 
-        const success = await useAddProducto(nuevoProducto);
+        const success = await addProducto(nuevoProducto);
 
         if (success) {
             onSave(nuevoProducto);

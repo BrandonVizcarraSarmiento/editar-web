@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditSection from "../../components/EditSection";
 
-
 type SectionData = {
   texto: string;
   imagen: string;
@@ -31,7 +30,7 @@ const EditMisionVision = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/misionvision/get");
+      const res = await fetch("/api/misionvision");
       const result = await res.json();
       setData(result);
       setPreviewImages({
@@ -45,7 +44,7 @@ const EditMisionVision = () => {
   }, []);
 
   const handleSubmit = async (section: keyof MisionVisionData) => {
-    const res = await fetch("/api/misionvision/update", {
+    const res = await fetch("/api/misionvision", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,11 +64,12 @@ const EditMisionVision = () => {
     if (e.target.files && e.target.files.length > 0) {
       const formData = new FormData();
       formData.append("file", e.target.files[0]);
-      formData.append("type", section);
-      const res = await fetch("/api/misionvision/upload", {
+
+      const res = await fetch("/api/misionvision", {
         method: "POST",
         body: formData,
       });
+
       const result = await res.json();
       if (result.success) {
         setData((prev) => ({

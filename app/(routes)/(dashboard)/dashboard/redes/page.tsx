@@ -20,7 +20,7 @@ const EditRedes = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("/api/redes/get");
+                const res = await fetch("/api/redes"); // Cambiado para el endpoint unificado
                 if (!res.ok) {
                     throw new Error("Failed to fetch data");
                 }
@@ -36,7 +36,7 @@ const EditRedes = () => {
 
     const handleSubmit = async (platform: keyof RedesData) => {
         try {
-            const res = await fetch("/api/redes/update", {
+            const res = await fetch("/api/redes", { // Cambiado para el endpoint unificado
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Novedad } from "@/types/novedad"; // Asegúrate de tener el tipo Novedad
-import { useAddNovedad } from "@/api/novedades/useAddNovedad"; // Implementación de la API
+import { Novedad } from "@/types/novedad";
+import { addNovedad } from "@/api/novedades/addNovedad";
 
 interface AgregarNovedadProps {
     novedades: Novedad[];
@@ -62,7 +62,7 @@ const AgregarNovedad = ({
             updatedAt: new Date().toISOString(),
         };
 
-        const success = await useAddNovedad(nuevaNovedad);
+        const success = await addNovedad(nuevaNovedad);
 
         if (success) {
             onSave(nuevaNovedad);

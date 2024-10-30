@@ -12,7 +12,7 @@ import {
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { TrashIcon } from "lucide-react";
-import { useDeleteProducto } from "@/api/productos/useDeleteProducto";
+import { deleteProducto } from "@/api/productos/deleteProducto";
 
 interface EliminarProductoProps {
     id: number;
@@ -21,7 +21,7 @@ interface EliminarProductoProps {
 
 const EliminarProducto: React.FC<EliminarProductoProps> = ({ id, onDelete }) => {
     const eliminarProducto = async () => {
-        const success = await useDeleteProducto(id);
+        const success = await deleteProducto(id);
 
         if (success) {
             onDelete(id);

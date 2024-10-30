@@ -1,5 +1,5 @@
-export async function useDeleteProducto(id: number): Promise<boolean> {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/productos/${id}`;
+export async function deleteNovedad(id: number): Promise<boolean> {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/novedades/${id}`;
 
     try {
         const response = await fetch(url, {
@@ -7,7 +7,7 @@ export async function useDeleteProducto(id: number): Promise<boolean> {
         });
 
         if (!response.ok) {
-            console.error("Error al eliminar el producto.");
+            console.error("Error al eliminar la novedad.");
             return false;
         }
 

@@ -12,7 +12,7 @@ import {
     AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { TrashIcon } from "lucide-react";
-import { useDeleteNovedad } from "@/api/novedades/useDeleteNovedad";
+import { deleteNovedad } from "@/api/novedades/deleteNovedad";
 
 interface EliminarNovedadProps {
     id: number;
@@ -21,7 +21,7 @@ interface EliminarNovedadProps {
 
 const EliminarNovedad: React.FC<EliminarNovedadProps> = ({ id, onDelete }) => {
     const eliminarNovedad = async () => {
-        const success = await useDeleteNovedad(id);
+        const success = await deleteNovedad(id);
 
         if (success) {
             onDelete(id);

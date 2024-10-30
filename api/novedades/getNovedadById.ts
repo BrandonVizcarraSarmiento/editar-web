@@ -1,6 +1,6 @@
 import { Novedad } from "@/types/novedad";
 
-export async function useNovedadId(id: string): Promise<Novedad | null> {
+export async function getNovedadById(id: string): Promise<Novedad | null> {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/novedades/${id}`;
 
     try {

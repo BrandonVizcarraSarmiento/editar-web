@@ -1,6 +1,6 @@
 import { Novedad } from "@/types/novedad";
 
-export async function useAddNovedad(novedad: Novedad): Promise<boolean> {
+export async function addNovedad(novedad: Novedad): Promise<boolean> {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/novedades`;
 
     try {

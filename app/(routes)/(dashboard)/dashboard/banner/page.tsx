@@ -1,4 +1,3 @@
-// dashboard/banner/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -23,10 +22,10 @@ const EditBanner = () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("type", selectedFile.type); // Aquí enviamos el tipo de archivo
+      formData.append("type", selectedFile.type); // Enviamos el tipo de archivo para distinguir en el backend
 
       try {
-        const res = await fetch("/api/banner/upload", {
+        const res = await fetch("/api/banner", {
           method: "POST",
           body: formData,
         });
@@ -34,8 +33,8 @@ const EditBanner = () => {
         if (res.ok) {
           const { filePath } = await res.json();
 
-          // Actualiza el archivo JSON (esto depende de cómo esté configurado tu proyecto)
-          await fetch("/api/banner/updateBannerImage", {
+          // Actualizamos el archivo JSON con la nueva ruta de la imagen
+          await fetch("/api/banner", {
             method: "POST",
             body: JSON.stringify({ image: filePath }),
             headers: {
@@ -52,7 +51,6 @@ const EditBanner = () => {
       }
     }
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-lg shadow-md dark:bg-slate-800">

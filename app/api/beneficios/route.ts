@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
 import fs from "fs";
+import path from "path";
 
+// Maneja tanto GET como POST
 export async function GET(request: NextRequest) {
   const jsonPath = path.join(process.cwd(), "public", "data", "beneficios.json");
 
@@ -13,4 +14,18 @@ export async function GET(request: NextRequest) {
   const beneficiosData = JSON.parse(fileContents);
 
   return NextResponse.json(beneficiosData);
+}
+
+export async function POST(request: NextRequest) {
+  const { beneficios } = await request.json();
+
+  const jsonPath = path.join(process.cwd(), "public", "data", "beneficios.json");
+
+  if (!fs.existsSync(jsonPath)) {
+    return NextResponse.json({ error: "File not found" }, { status: 404 });
+  }
+
+  fs.writeFileSync(jsonPath, JSON.stringify(beneficios, null, 2));
+
+  return NextResponse.json({ success: true });
 }

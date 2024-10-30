@@ -13,18 +13,19 @@ import {
     AlertDialogDescription,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ToastProvider } from "@/components/ui/toast"; // Asegúrate de que este componente exista
+import { ToastProvider } from "@/components/ui/toast";
 
 const Galeria = () => {
     const [images, setImages] = useState<string[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [toastMessage, setToastMessage] = useState<string | null>(null); // Estado para el mensaje del toast
-    const [showToast, setShowToast] = useState(false); // Estado para controlar la visibilidad del toast
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
 
-    // Obtener las imágenes al cargar el componente
     useEffect(() => {
         const fetchImages = async () => {
-            const res = await fetch("/api/galeria/get");
+            const res = await fetch("/api/galeria", {
+                method: "GET",
+            });
             const data = await res.json();
             setImages(data.images);
         };
@@ -32,11 +33,10 @@ const Galeria = () => {
         fetchImages();
     }, []);
 
-    // Función para eliminar imagen
     const handleDelete = async () => {
         if (!selectedImage) return;
 
-        const res = await fetch("/api/galeria/delete", {
+        const res = await fetch("/api/galeria", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -48,23 +48,21 @@ const Galeria = () => {
 
         if (result.success) {
             setImages((prevImages) => prevImages.filter((img) => img !== selectedImage));
-            setSelectedImage(null); // Limpiar la imagen seleccionada
-            setToastMessage("Imagen eliminada correctamente"); // Establece el mensaje para el toast
+            setSelectedImage(null);
+            setToastMessage("Imagen eliminada correctamente");
         } else {
-            setToastMessage("Error al eliminar la imagen"); // Mensaje de error
+            setToastMessage("Error al eliminar la imagen");
         }
 
-        // Mostrar el toast
         setShowToast(true);
 
-        // Ocultar el toast después de unos segundos
         setTimeout(() => {
             setShowToast(false);
-        }, 3000); // El toast desaparecerá después de 3 segundos
+        }, 3000);
     };
 
     return (
-        <ToastProvider> {/* Proveedor de toast */}
+        <ToastProvider>
             <div className="p-4 h-full">
                 <h2 className="text-xl font-bold mb-2">Galería de Imágenes</h2>
                 <div className="overflow-y-auto scrollbar-hide h-[87vh] p-2 border border-gray-300 rounded-lg dark:bg-slate-800">
@@ -112,7 +110,6 @@ const Galeria = () => {
                 </div>
             </div>
 
-            {/* Componente Toast */}
             {showToast && toastMessage && (
                 <div className="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
                     {toastMessage}

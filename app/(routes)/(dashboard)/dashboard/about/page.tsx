@@ -20,7 +20,7 @@ const EditAbout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/about/get");
+        const res = await fetch("/api/about");
         const data = await res.json();
         setAboutData(data);
         setPreviewImages({
@@ -36,7 +36,7 @@ const EditAbout = () => {
 
   const handleTextChange = async (section: string, texto: string, imagen?: string) => {
     try {
-      const res = await fetch("/api/about/update", {
+      const res = await fetch("/api/about", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const EditAbout = () => {
     formData.append("type", section);
 
     try {
-      const res = await fetch("/api/about/upload", {
+      const res = await fetch("/api/about", {
         method: "POST",
         body: formData,
       });
@@ -110,7 +110,7 @@ const EditAbout = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Editar "Quienes Somos"</h2>
+      <h2 className="text-xl font-bold mb-4">Editar Quienes Somos</h2>
       <Tabs>
         <TabsList>
           <TabsTrigger value="quienesSomos">Quienes Somos</TabsTrigger>

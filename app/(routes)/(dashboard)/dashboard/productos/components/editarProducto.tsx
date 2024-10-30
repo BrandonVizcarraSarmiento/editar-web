@@ -4,8 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Producto } from "@/types/producto";
-import { useEditProducto } from "@/api/productos/useEditProducto";
-import { removeOldestDestacado } from "@/api/productos/useRemoveOldestDestacado";
+import { editProducto } from "@/api/productos/editProducto";
 
 interface EditarProductoProps {
     producto: Producto | null;
@@ -43,12 +42,25 @@ const EditarProducto = ({ producto, onSave, onUpdateDestacados, productos, child
         const destacadosActuales = productos.filter(p => p.destacado);
         const esDestacadoActual = producto?.destacado;
 
+        // Si se intenta marcar como destacado un nuevo producto y ya hay 3 destacados
         if (destacado && !esDestacadoActual && destacadosActuales.length >= 3) {
+            // Quitar el estado destacado del producto más antiguo
             const productoAMover = destacadosActuales[0];
-            const resultado = await removeOldestDestacado(productoAMover);
+            const updatedDestacados = destacadosActuales.filter(p => p.id !== productoAMover.id);
+            const updatedProductoAMover: Producto = {
+                ...productoAMover,
+                destacado: false,
+                updatedAt: new Date().toISOString(),
+            };
 
-            if (!resultado) {
-                setError("Error al remover el producto más antiguo de los destacados.");
+            // Actualizar el estado de los productos
+            onUpdateDestacados([...updatedDestacados, updatedProductoAMover]);
+
+            // Eliminar el destacado de otro producto
+            try {
+                await editProducto(productoAMover, updatedProductoAMover);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Error desconocido");
                 return;
             }
         }
@@ -64,7 +76,7 @@ const EditarProducto = ({ producto, onSave, onUpdateDestacados, productos, child
         };
 
         try {
-            const response = await useEditProducto(producto!, updatedProducto);
+            const response = await editProducto(producto!, updatedProducto);
 
             if (response) {
                 onSave(updatedProducto);

@@ -17,7 +17,7 @@ const EditTestimonio = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/testimonios/get");
+      const res = await fetch("/api/testimonios");
       const data = await res.json();
       setTestimonios(data);
       setEditedTestimonios(data);
@@ -28,15 +28,18 @@ const EditTestimonio = () => {
 
   const handleSubmit = async (index: number) => {
     const { id, nombre, testimonio, avatar } = editedTestimonios[index];
-    const res = await fetch("/api/testimonios/update", {
+    const res = await fetch("/api/testimonios", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ id, nombre, testimonio, avatar }),
     });
+
     if (res.ok) {
       alert("Testimonio guardado correctamente");
+    } else {
+      alert("Error al guardar el testimonio");
     }
   };
 
@@ -54,7 +57,7 @@ const EditTestimonio = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch("/api/testimonios/upload", {
+      const res = await fetch("/api/testimonios", {
         method: "POST",
         body: formData,
       });
@@ -62,6 +65,8 @@ const EditTestimonio = () => {
       if (res.ok) {
         const result = await res.json();
         handleChange(index, 'avatar', result.filePath);
+      } else {
+        alert("Error al subir la imagen");
       }
     }
   };
@@ -71,31 +76,23 @@ const EditTestimonio = () => {
       <h2 className="text-xl font-bold mb-4">Editar Testimonios</h2>
       <Tabs>
         <TabsList>
-          <TabsTrigger value="testimonio-0">Testimonio 1</TabsTrigger>
-          <TabsTrigger value="testimonio-1">Testimonio 2</TabsTrigger>
+          {editedTestimonios.map((_, index) => (
+            <TabsTrigger key={index} value={`testimonio-${index}`}>Testimonio {index + 1}</TabsTrigger>
+          ))}
         </TabsList>
 
-        <TabsContent value="testimonio-0">
-          <EditSectionTestimonio
-            sectionName="Testimonio 1"
-            sectionData={editedTestimonios[0]}
-            previewImage={editedTestimonios[0]?.avatar}
-            handleTextChange={(field, value) => handleChange(0, field as keyof Testimonio, value)}
-            handleFileUpload={(e) => handleImageUpload(0, e)}
-            handleSubmit={() => handleSubmit(0)}
-          />
-        </TabsContent>
-
-        <TabsContent value="testimonio-1">
-          <EditSectionTestimonio
-            sectionName="Testimonio 2"
-            sectionData={editedTestimonios[1]}
-            previewImage={editedTestimonios[1]?.avatar}
-            handleTextChange={(field, value) => handleChange(1, field as keyof Testimonio, value)}
-            handleFileUpload={(e) => handleImageUpload(1, e)}
-            handleSubmit={() => handleSubmit(1)}
-          />
-        </TabsContent>
+        {editedTestimonios.map((testimonio, index) => (
+          <TabsContent key={index} value={`testimonio-${index}`}>
+            <EditSectionTestimonio
+              sectionName={`Testimonio ${index + 1}`}
+              sectionData={testimonio}
+              previewImage={testimonio?.avatar}
+              handleTextChange={(field, value) => handleChange(index, field as keyof Testimonio, value)}
+              handleFileUpload={(e) => handleImageUpload(index, e)}
+              handleSubmit={() => handleSubmit(index)}
+            />
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditBeneficioTab from "../../components/editBeneficioTab";
-
 
 type Beneficio = {
   pregunta: string;
@@ -19,7 +17,11 @@ const EditBeneficio = () => {
 
   useEffect(() => {
     const fetchBeneficios = async () => {
-      const res = await fetch("/api/beneficios/get");
+      const res = await fetch("/api/beneficios");
+      if (!res.ok) {
+        alert("Error al cargar los beneficios");
+        return;
+      }
       const data = await res.json();
       setBeneficios(data);
       setEditedBeneficios(data);
@@ -29,7 +31,7 @@ const EditBeneficio = () => {
   }, []);
 
   const handleSubmit = async () => {
-    const res = await fetch("/api/beneficios/update", {
+    const res = await fetch("/api/beneficios", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,6 +40,8 @@ const EditBeneficio = () => {
     });
     if (res.ok) {
       alert("Datos guardados correctamente");
+    } else {
+      alert("Error al guardar los datos");
     }
   };
 
@@ -54,40 +58,23 @@ const EditBeneficio = () => {
       <h2 className="text-xl font-bold mb-4">Editar Beneficios</h2>
       <Tabs>
         <TabsList>
-          <TabsTrigger value="beneficio-0">Beneficio 1</TabsTrigger>
-          <TabsTrigger value="beneficio-1">Beneficio 2</TabsTrigger>
-          <TabsTrigger value="beneficio-2">Beneficio 3</TabsTrigger>
-          {/* Agrega más según la cantidad de beneficios que tengas */}
+          {editedBeneficios.map((_, index) => (
+            <TabsTrigger key={index} value={`beneficio-${index}`}>
+              Beneficio {index + 1}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
-        <TabsContent value="beneficio-0">
-          <EditBeneficioTab
-            index={0}
-            beneficio={editedBeneficios[0]}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        </TabsContent>
-
-        <TabsContent value="beneficio-1">
-          <EditBeneficioTab
-            index={1}
-            beneficio={editedBeneficios[1]}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        </TabsContent>
-
-        <TabsContent value="beneficio-2">
-          <EditBeneficioTab
-            index={2}
-            beneficio={editedBeneficios[2]}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        </TabsContent>
-
-        {/* Agrega más TabsContent según la cantidad de beneficios que tengas */}
+        {editedBeneficios.map((beneficio, index) => (
+          <TabsContent key={index} value={`beneficio-${index}`}>
+            <EditBeneficioTab
+              index={index}
+              beneficio={beneficio}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+            />
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

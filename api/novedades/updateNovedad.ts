@@ -1,7 +1,7 @@
-import { Producto } from "@/types/producto";
+import { Novedad } from "@/types/novedad";
 
-export async function useEditProducto(producto: Producto, updatedProducto: Producto) {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/productos/${producto.id}`;
+export async function updateNovedad(novedad: Novedad, updatedNovedad: Novedad) {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/novedades/${novedad.id}`;
 
     try {
         const response = await fetch(url, {
@@ -9,11 +9,11 @@ export async function useEditProducto(producto: Producto, updatedProducto: Produ
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(updatedProducto),
+            body: JSON.stringify(updatedNovedad),
         });
 
         if (!response.ok) {
-            throw new Error("Error al editar el producto.");
+            throw new Error("Error al actualizar la novedad.");
         }
 
         return await response.json();
